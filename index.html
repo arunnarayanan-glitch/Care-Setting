@@ -218,7 +218,7 @@ strong{font-weight:600}
     </section>
     <section class="filter-bar" aria-label="Search and filters">
       <div class="filters">
-        <div class="picker" style="max-width:340px;flex:1 1 220px;"><label for="searchInput" class="visually-hidden">Search Care Settings</label><input type="text" class="text" id="searchInput" placeholder="Search Care Settings…" oninput="onDashboardSearchInput(this.value)"></div>
+        <div class="picker" style="max-width:340px;flex:1 1 220px;"><label for="searchInput" class="visually-hidden">Search Care Settings</label><input type="text" class="text" id="searchInput" placeholder="Search by name" oninput="onDashboardSearchInput(this.value)"></div>
         <div class="picker" style="max-width:220px;"><button type="button" class="filter-select-btn" id="statusFilterBtn" aria-haspopup="true" aria-expanded="false" onclick="toggleFilterPicker('status')">Status: All</button><div class="picker-menu" id="statusFilterMenu"></div></div>
         <div class="picker" style="max-width:220px;"><button type="button" class="filter-select-btn" id="visitCategoryFilterBtn" aria-haspopup="true" aria-expanded="false" onclick="toggleFilterPicker('visitCategory')">Visit Category: All</button><div class="picker-menu" id="visitCategoryFilterMenu"></div></div>
         <button type="button" class="link-btn" id="clearFiltersBtn" style="display:none;" onclick="clearAllFilters()">Clear all</button>
@@ -284,7 +284,7 @@ strong{font-weight:600}
   </header>
   <div class="panel-scroll-wrap" style="display:flex;flex-direction:column;min-height:0;">
   <div class="sub-cs-banner" id="subCsBanner" style="display:none;">
-    <span>This is a sub care setting of <strong><span id="subCsBannerMainName"></span></strong>.</span>
+    <span>Part of <strong><span id="subCsBannerMainName"></span></strong>.</span>
     <div style="display:flex; gap:8px;">
       <button type="button" class="btn tertiary small" id="subCsEditBtn" onclick="editMainModal(pendingAddToMainId)">Edit</button>
       <button type="button" class="btn tertiary small" id="subCsAddBtn" onclick="openAddSubToMain(pendingAddToMainId)">+ Add Sub Care Setting</button>
@@ -293,7 +293,7 @@ strong{font-weight:600}
   <div class="sub-cs-banner" id="addToMainBanner" style="display:none;">
     <div style="display:flex; align-items:center; gap:10px;">
       <button type="button" class="btn tertiary small" onclick="goBackFromAddSub()">← Back</button>
-      <span>Adding a new Sub Care Setting to "<strong><span id="addToMainBannerName"></span></strong>".</span>
+      <span>Adding a new Sub Care Setting to <strong><span id="addToMainBannerName"></span></strong></span>
     </div>
   </div>
 
@@ -317,7 +317,7 @@ strong{font-weight:600}
           <input type="checkbox" id="groupModeToggle" onchange="handleGroupModeToggle()"><span class="slider round"></span>
         </label>
         <span style="font-weight:600;color:#000;font-size:var(--text-sm);">Sub Care Settings</span>
-        <span class="info" onclick="toggleTip(this, event)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg><span class="tip">Turn on when a Health Delivery Organization runs several similar-but-distinct care areas (e.g. ICU, Maternity, Neonatal) that they want organized under one Main Care Setting (e.g. "Inpatient"). Each sub-setting below is a fully independent Care Setting with its own Visit Defaults — the Main Care Setting is a label only, nothing is shared or inherited between them. This can be turned on at creation, or later while the Care Setting is still a Draft — once it's Active, Inactive, or Retired, this is locked for good.</span></span>
+        <span class="info" onclick="toggleTip(this, event)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg><span class="tip">Independent care area grouped under a Care Setting.</span></span>
         <button class="btn small" type="button" id="addSubSettingBtn" style="margin-left:auto; display:none;" onclick="addSubSettingBlock()">+ Add sub-setting</button>
       </div>
       <hr style="border:none;border-top:1px solid #edf0f2;margin:14px 0 0;">
@@ -326,7 +326,7 @@ strong{font-weight:600}
 
 
     <div class="flat-section" id="sec-clinical">
-      <h2 class="flat-section-title">Visit Defaults <span class="info" onclick="toggleTip(this, event)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg><span class="tip">The starting values Trackerboards and other consumers see for this Care Setting.</span></span></h2>
+      <h2 class="flat-section-title">Visit Defaults <span class="info" onclick="toggleTip(this, event)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg><span class="tip">Default values passed to Trackerboards and other tools.</span></span></h2>
       <div class="form-grid">
         <div class="field">
           <label for="defaultVisitCategory">Default Visit Category</label>
@@ -336,7 +336,7 @@ strong{font-weight:600}
           <div class="field-label-row">
             <label for="defaultDurationValue">Duration</label>
             <span class="info" onclick="toggleTip(this, event)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg>
-              <span class="tip">The expected total time a patient spends in this Care Setting before follow-up is expected — not an appointment slot length or SLA timer.</span>
+              <span class="tip">Expected length of stay — not a scheduling slot or SLA timer.</span>
             </span>
           </div>
           <div class="inline-pair">
@@ -348,7 +348,7 @@ strong{font-weight:600}
           </div>
         </div>
         <div class="field">
-          <label for="chiefComplaintForm">Chief Complaint Form</label>
+          <label for="chiefComplaintForm">Intake Form</label>
           <select id="chiefComplaintForm" onchange="renderChiefComplaintFormLink()"></select>
           
         </div>
@@ -545,22 +545,20 @@ function lifecycleWarning(cs, action) {
     if (cs.mainId) {
       const siblingCount = CARE_SETTINGS.filter(c => c.mainId === cs.mainId).length;
       if (siblingCount <= 1) {
-        return `Permanently delete "${cs.name}"? It's the only Sub Care Setting in "${mainLabel(cs.mainId)}" — deleting it will delete "${mainLabel(cs.mainId)}" too. Its name will be free to use again.`;
+        return `Permanently delete "${cs.name}"? It's the only Sub Care Setting in "${mainLabel(cs.mainId)}" — deleting it removes "${mainLabel(cs.mainId)}" too, and both names become available again.`;
       }
     }
     return `Permanently delete "${cs.name}"?`;
   }
   if (blocking) {
     const verb = action === "retire" ? "Retiring" : "Deactivating";
-    return `${d.trackerboards.active} active Trackerboard${d.trackerboards.active === 1 ? "" : "s"} reference${d.trackerboards.active === 1 ? "s" : ""} "${cs.name}". ${verb} won't stop those, but new use will be blocked. Existing records are preserved. Continue?`;
+    return `"${cs.name}" is used by ${d.trackerboards.active} active Trackerboard${d.trackerboards.active === 1 ? "" : "s"}. ${d.trackerboards.active === 1 ? "It'll" : "They'll"} keep working — this only blocks new ones.`;
   }
   if (draftOnly && action === "retire") {
     const draftCount = d.trackerboards.total - d.trackerboards.active;
-    return `No active dependencies, but ${draftCount} draft Trackerboard${draftCount === 1 ? "" : "s"} reference this Care Setting. ${draftCount === 1 ? "It" : "They"}'ll need a new Care Setting assigned before ${draftCount === 1 ? "it" : "they"} can be activated. Continue?`;
+    return `${draftCount} draft Trackerboard${draftCount === 1 ? "" : "s"} reference this Care Setting. ${draftCount === 1 ? "It'll" : "They'll"} need a different Care Setting before ${draftCount === 1 ? "it" : "they"} can go live.`;
   }
-  return action === "retire"
-    ? `"${cs.name}" will no longer be available for new use. Existing records are preserved.`
-    : `"${cs.name}" will no longer be available for new use. Existing records are preserved.`;
+  return `"${cs.name}" won't be available for new use. Anything already using it keeps working.`;
 }
 
 const state = { status: "draft", dirty: false, readonly: false, suppressTrack: false, touched: new Set(), blocking: 0, sort: "updated", dir: "desc", page: 1, pageSize: 10 };
@@ -588,7 +586,7 @@ function viewChiefComplaintForm() {
   if (!form || form.id === "form-none") return;
   openModal({
     title: form.name,
-    body: `<p class="note">This Care Setting stores a reference to the form record, not just its name — so other modules (like a Trackerboard) can link straight to it instead of matching on a label.</p>`,
+    body: `<p class="note">Linked by reference, not by name — so tools like Trackerboards always point to the right form.</p>`,
     actions: [{ label: "Close", close: true }]
   });
 }
@@ -930,7 +928,7 @@ async function quickDelete(idx) {
       const label = mainLabel(mainId);
       MAIN_GROUPS = MAIN_GROUPS.filter(m => m.id !== mainId);
       mainDeleted = true;
-      toast(`Draft deleted — "${label}" had no other Sub Care Settings, so it was deleted too.`);
+      toast(`Draft deleted. "${label}" had no other Sub Care Settings, so it's gone too.`);
     }
     renderTable();
     if (!mainDeleted) toast("Draft deleted.");
@@ -1070,10 +1068,10 @@ function confirmDraftConversionModal() {
   };
   return new Promise(resolve => openModal({
     title: "Add sub-settings to this Care Setting?",
-    body: `<p style="margin:0 0 12px;line-height:1.5">The first sub-setting below will start with "${current.name}"'s current Visit Category, Duration, and Intake Form — you'll still give it its own name.</p>
+    body: `<p style="margin:0 0 12px;line-height:1.5">The first sub-setting will copy this Care Setting's Visit Category, Duration, and Intake Form. You'll still need to name it.</p>
       <label style="display:flex;align-items:center;gap:8px;font-size:var(--text-sm);cursor:pointer;">
         <input type="checkbox" id="carryDefaultsCheckbox" checked>
-        Pre-fill any sub-settings I add later with these same details
+        Use these same details for any sub-settings I add later
       </label>`,
     actions: [
       { label: "Cancel", handler: () => { closeModal(); resolve(false); } },
@@ -1103,7 +1101,7 @@ async function handleGroupModeToggle() {
       return n && n.value.trim();
     });
     if (hasContent) {
-      const proceed = await confirmBox("Turn off Sub Care Settings?", "Everything entered for the sub-settings in this session will be discarded, and this goes back to being a single standalone Care Setting. Continue?", "Turn off", true);
+      const proceed = await confirmBox("Turn off Sub Care Settings?", "This discards everything entered for the sub-settings and returns to a single standalone Care Setting.", "Turn off", true);
       if (!proceed) { toggle.checked = true; return; }
     }
     carriedSubDefaults = null;
@@ -1155,7 +1153,7 @@ function subSettingBlockHtml(subId) {
       <h3 style="margin:0 0 10px; font-size:var(--text-base); font-weight:600;">Visit Defaults</h3>
       <div class="form-grid">
         <div class="field">
-          <label for="${scope}defaultVisitCategory">Visit Type</label>
+          <label for="${scope}defaultVisitCategory">Default Visit Category</label>
           <select id="${scope}defaultVisitCategory">${optionsHtml(VISIT_CATEGORIES)}</select>
         </div>
         <div class="field">
@@ -1196,10 +1194,10 @@ function applySubPrefill(subId, defaults) {
 }
 async function removeSubSettingBlock(subId) {
   const container = document.getElementById("subSettingsContainer");
-  if (container.children.length <= 1) { toast("At least one sub-setting is required. Turn the toggle off if you don't need any."); return; }
+  if (container.children.length <= 1) { toast("Add at least one sub-setting, or turn the toggle off."); return; }
   const nameEl = document.getElementById(subFieldScope(subId) + "nameField");
   const hasContent = nameEl && nameEl.value.trim();
-  if (hasContent && !(await confirmBox("Remove this sub-setting?", "Everything entered for it in this session will be discarded. Continue?", "Remove", true))) return;
+  if (hasContent && !(await confirmBox("Remove this sub-setting?", "This discards everything entered for it.", "Remove", true))) return;
   document.querySelector(`[data-sub-id="${subId}"]`).remove();
   refreshSubSettingHeadings();
   touchSection(document.getElementById("cardState-basic"));
@@ -1243,8 +1241,8 @@ function computeIssuesFor(fieldScope) {
   const shortName = shortNameField ? shortNameField.value.trim() : "";
   const basic = [];
   if (!name) basic.push("Care Setting Name is required.");
-  else if (isNameTaken(name, editingIndex)) basic.push("Another Care Setting already uses this name.");
-  if (shortName && isNameTaken(shortName, editingIndex)) basic.push("Another Care Setting already uses this Short Name.");
+  else if (isNameTaken(name, editingIndex)) basic.push("This name is already in use.");
+  if (shortName && isNameTaken(shortName, editingIndex)) basic.push("This Short Name is already in use.");
   return { basic };
 }
 function collectAllSubRecords(mainId) {
@@ -1281,12 +1279,12 @@ async function saveGroupDraft() {
   // dedicated, reference-based path (openAddSubToMain) precisely so it can never happen by
   // free-text coincidence again — so a name match against an existing Main is a hard stop here,
   // not a silent join.
-  if (findMainByLabel(groupName)) { toast(`"${groupName}" already exists as a Main Care Setting. To add a Sub Care Setting to it, open one of its existing Sub Care Settings and use "Add Sub Care Setting" there.`); return; }
+  if (findMainByLabel(groupName)) { toast(`"${groupName}" already exists. To add to it, open one of its Sub Care Settings and use "Add Sub Care Setting."`); return; }
   if (isNameTaken(groupName, editingIndex)) { toast(`"${groupName}" is already used by another Care Setting.`); return; }
   const blocks = [...document.querySelectorAll("[data-sub-id]")];
   const names = blocks.map(b => document.getElementById(subFieldScope(b.dataset.subId) + "nameField").value.trim());
   const shortNames = blocks.map(b => document.getElementById(subFieldScope(b.dataset.subId) + "shortNameField").value.trim());
-  if (names.some(n => !n)) { toast("Every sub-setting needs a name before saving."); return; }
+  if (names.some(n => !n)) { toast("Every sub-setting needs a name."); return; }
   const dupError = findBatchDuplicate(names, shortNames);
   if (dupError) { toast(dupError); return; }
   const main = { id: nextMainId(), label: groupName };
@@ -1313,12 +1311,12 @@ async function activateGroup() {
   const groupName = document.getElementById("nameField").value.trim();
   showFieldError("nameField", !groupName ? "Main Care Setting Name is required." : "");
   if (!groupName) { document.getElementById("nameField").focus(); return; }
-  if (findMainByLabel(groupName)) { toast(`"${groupName}" already exists as a Main Care Setting. To add a Sub Care Setting to it, open one of its existing Sub Care Settings and use "Add Sub Care Setting" there.`); return; }
+  if (findMainByLabel(groupName)) { toast(`"${groupName}" already exists. To add to it, open one of its Sub Care Settings and use "Add Sub Care Setting."`); return; }
   if (isNameTaken(groupName, editingIndex)) { toast(`"${groupName}" is already used by another Care Setting.`); return; }
   const blocks = [...document.querySelectorAll("[data-sub-id]")];
   const names = blocks.map(b => document.getElementById(subFieldScope(b.dataset.subId) + "nameField").value.trim());
   const shortNames = blocks.map(b => document.getElementById(subFieldScope(b.dataset.subId) + "shortNameField").value.trim());
-  if (names.some(n => !n)) { toast("Every sub-setting needs a name before saving."); return; }
+  if (names.some(n => !n)) { toast("Every sub-setting needs a name."); return; }
   const dupError = findBatchDuplicate(names, shortNames);
   if (dupError) { toast(dupError); return; }
   const main = { id: nextMainId(), label: groupName };
@@ -1342,7 +1340,7 @@ async function activateGroup() {
   });
   renderTable();
   const draftCount = created.length - activatedCount;
-  toast(`${created.length} Care Settings created under "${groupName}" — ${activatedCount} activated${draftCount ? `, ${draftCount} left as Draft (missing required info)` : ""}.`);
+  toast(`${created.length} Care Settings created under "${groupName}" — ${activatedCount} activated${draftCount ? `, ${draftCount} left as Draft (missing info)` : ""}.`);
   state.dirty = false;
   closePanel();
 }
@@ -1362,12 +1360,12 @@ function computeIssues() {
   const basic = [];
   let shortNameDupe = false;
   if (!name) basic.push("Care Setting Name is required.");
-  else if (isNameTaken(name, editingIndex)) basic.push("Another Care Setting or Main Care Setting already uses this name.");
+  else if (isNameTaken(name, editingIndex)) basic.push("This name is already in use.");
   // Short Name is optional, but once given, it must be unique — Trackerboard configuration
   // keys off Short Name internally, so a collision here isn't just cosmetic (Phase 1). Both
   // checks now run against the shared Name/Short Name/Main-label namespace (Phase 2, 2.5).
   if (shortName && isNameTaken(shortName, editingIndex)) {
-    basic.push("Another Care Setting or Main Care Setting already uses this Short Name.");
+    basic.push("This Short Name is already in use.");
     shortNameDupe = true;
   }
   return { basic, shortNameDupe };
@@ -1393,7 +1391,7 @@ function renderValidationState() {
   setSectionState("cardState-basic", state.touched.has("cardState-basic") ? issues.basic.length : 0, state.touched.has("cardState-basic"));
   setSectionState("cardState-clinical", 0, state.touched.has("cardState-clinical"));
   showFieldError("nameField", state.touched.has("cardState-basic") && !document.getElementById("nameField").value.trim() ? "Care Setting Name is required." : "");
-  showFieldError("shortNameField", state.touched.has("cardState-basic") && issues.shortNameDupe ? "Another Care Setting already uses this Short Name." : "");
+  showFieldError("shortNameField", state.touched.has("cardState-basic") && issues.shortNameDupe ? "This Short Name is already in use." : "");
   state.blocking = issues.basic.length;
   renderStatusBadge();
   renderFooter();
@@ -1484,8 +1482,8 @@ function editMainModal(mainId) {
           shortErrEl.textContent = "";
           let hasError = false;
           if (!newName) { nameErrEl.textContent = "Name is required."; hasError = true; }
-          else if (isNameTaken(newName, null, mainId)) { nameErrEl.textContent = "Another Care Setting or Main Care Setting already uses this name."; hasError = true; }
-          if (newShortName && isNameTaken(newShortName, null, mainId)) { shortErrEl.textContent = "Another Care Setting or Main Care Setting already uses this Short Name."; hasError = true; }
+          else if (isNameTaken(newName, null, mainId)) { nameErrEl.textContent = "This name is already in use."; hasError = true; }
+          if (newShortName && isNameTaken(newShortName, null, mainId)) { shortErrEl.textContent = "This Short Name is already in use."; hasError = true; }
           if (hasError) return;
           main.label = newName;
           main.shortName = newShortName;
@@ -1494,7 +1492,7 @@ function editMainModal(mainId) {
           if (document.getElementById("subCsBanner").style.display !== "none") {
             document.getElementById("subCsBannerMainName").textContent = newName;
           }
-          toast(`"${newName}" saved — every Sub Care Setting under it now reflects the change.`);
+          toast(`"${newName}" saved. All Sub Care Settings under it are updated.`);
         } }
     ]
   });
@@ -1583,7 +1581,7 @@ function renderFooter() {
   } else if (state.status === "inactive") {
     buttons = `${cancelBtn}<button class="btn primary" onclick="activateCareSetting()">Reactivate</button><button class="btn danger" onclick="retireCareSetting()">Retire</button>`;
   } else if (state.status === "retired") {
-    buttons = `${cancelBtn}<span class="note mt-0">Retired Care Settings are read-only history.</span>`;
+    buttons = `${cancelBtn}<span class="note mt-0">Retired records can't be edited.</span>`;
   }
   footer.innerHTML = `<div style="display:flex; gap:8px; margin-left:auto;">${buttons}</div>`;
 }
@@ -1697,7 +1695,7 @@ async function retireCareSetting() {
   toast("Care Setting retired.");
 }
 
-async function requestClose() { if (state.dirty && !(await confirmBox("Discard unsaved changes?", "You have unsaved changes. Discard them?", "Discard and close", true))) return; closePanel(); }
+async function requestClose() { if (state.dirty && !(await confirmBox("Discard unsaved changes?", "Your changes won't be saved.", "Discard and close", true))) return; closePanel(); }
 function closePanel() {
   document.getElementById("panel").classList.remove("open");
   document.getElementById("panel").setAttribute("aria-hidden", "true");
@@ -1714,14 +1712,14 @@ function closePanel() {
 let addSubOrigin = null;
 async function openAddSubToMain(mainId) {
   if (!mainId) return;
-  if (state.dirty && !(await confirmBox("Discard unsaved changes?", "You have unsaved changes on this Care Setting. Discard them?", "Discard and continue", true))) return;
+  if (state.dirty && !(await confirmBox("Discard unsaved changes?", "Your changes on this Care Setting won't be saved.", "Discard and continue", true))) return;
   // Remember where this was opened from, so "← Back" can return to that same record instead of
   // just closing the drawer outright.
   addSubOrigin = editingIndex !== null ? { idx: editingIndex } : null;
   openPanel(null, undefined, { addToMainId: mainId });
 }
 async function goBackFromAddSub() {
-  if (state.dirty && !(await confirmBox("Discard unsaved changes?", "You have unsaved changes on this new Sub Care Setting. Discard them?", "Discard and go back", true))) return;
+  if (state.dirty && !(await confirmBox("Discard unsaved changes?", "This new Sub Care Setting hasn't been saved yet.", "Discard and go back", true))) return;
   if (addSubOrigin && CARE_SETTINGS[addSubOrigin.idx]) {
     openPanel(CARE_SETTINGS[addSubOrigin.idx], addSubOrigin.idx);
   } else {
