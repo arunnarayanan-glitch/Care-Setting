@@ -195,6 +195,19 @@ th[aria-sort="ascending"] .sort-glyph,th[aria-sort="descending"] .sort-glyph{opa
 strong{font-weight:600}
 .switch{position:relative;display:inline-block;width:35px;height:20px;margin-bottom:0;flex:0 0 auto}.switch input{display:none}.switch .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#cfcfcf;transition:all .4s}.switch .slider.round{border-radius:10px}.switch .slider:before{position:absolute;content:'';height:12px;width:12px;left:4px;bottom:4px;background-color:#fff;transition:all .4s}.switch .slider.round:before{border-radius:50%}.switch input:checked+.slider:before{left:19px}.switch input:checked+.slider{background-color:#75bd11}
 .table td{font-size:12px}.dataTables_info{font-size:var(--text-xs);font-weight:600;font-style:italic;color:#75787d}.paginate_button{display:inline-flex;align-items:center;justify-content:center;height:22px;min-width:22px;padding:1px 8px;margin-left:3px;color:#8b959e;border:1px solid transparent;border-radius:1px;background:#fff;font-size:12px;cursor:pointer}.paginate_button:hover:not(:disabled),.paginate_button.current{color:#fff;background:#1a4f85}.paginate_button:disabled{color:#8b959e;background:#fff;cursor:not-allowed;opacity:.6}.page-size-inline{display:inline-flex;align-items:center;gap:6px;margin-left:14px;font-size:var(--text-sm);color:var(--muted)}.page-size-inline select{margin:0}.group-row{cursor:pointer;background:#fff;font-weight:600}.group-row td{color:var(--muted)}.group-row .cell-title{color:var(--ink)}.group-row:hover{background:#f7fbfe}.group-row.open{background:#e6f0fa}.group-chevron{display:inline-block;margin-right:6px;color:#5f6b76;transition:transform .12s}.group-row.open .group-chevron{transform:rotate(90deg)}.group-row .cell-meta{display:inline;margin:0 0 0 8px;font-weight:400}.group-child-row td:first-child{padding-left:30px;border-left:2px solid #cfdbe6}
+/* Phase 3: Main-edit accordion cards — same .card base as everything else, but deliberately
+   denser when collapsed (this drawer can hold four-plus of these stacked at once, so a collapsed
+   row reading as a full padded block reads as chunky rather than scannable). Only affects cards
+   rendered by subEditCardHtml — the create-mode sub-setting cards (subSettingBlockHtml) keep
+   their original spacing untouched. */
+.sub-edit-card{margin-bottom:8px;}
+.sub-edit-card .card-head{padding:9px 12px;align-items:center;}
+.sub-edit-card.collapsed{margin-bottom:6px;}
+.sub-edit-card.collapsed .card-head{border-bottom:0;}
+.sub-edit-card .card-title{display:flex;align-items:center;gap:8px;font-size:var(--text-base);}
+.sub-edit-card .card-title .pill{margin-left:0;}
+.sub-edit-unsaved{color:var(--warn);font-size:var(--text-xs);font-weight:600;}
+.sub-edit-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid #edf0f2;}
   </style>
 </head>
 <body>
@@ -283,13 +296,6 @@ strong{font-weight:600}
     </div>
   </header>
   <div class="panel-scroll-wrap" style="display:flex;flex-direction:column;min-height:0;">
-  <div class="sub-cs-banner" id="subCsBanner" style="display:none;">
-    <span>Part of <strong><span id="subCsBannerMainName"></span></strong>.</span>
-    <div style="display:flex; gap:8px;">
-      <button type="button" class="btn tertiary small" id="subCsEditBtn" onclick="editMainModal(pendingAddToMainId)">Edit</button>
-      <button type="button" class="btn tertiary small" id="subCsAddBtn" onclick="openAddSubToMain(pendingAddToMainId)">+ Add Sub Care Setting</button>
-    </div>
-  </div>
   <div class="sub-cs-banner" id="addToMainBanner" style="display:none;">
     <div style="display:flex; align-items:center; gap:10px;">
       <button type="button" class="btn tertiary small" onclick="goBackFromAddSub()">← Back</button>
@@ -310,6 +316,13 @@ strong{font-weight:600}
         <input type="text" id="shortNameField" placeholder="e.g. ICU" oninput="onNameInput()" aria-describedby="shortNameFieldError">
         <div class="field-error" id="shortNameFieldError"></div>
       </div>
+    </div>
+    <!-- Phase 3: Main-edit mode only. Sits where the create-mode grouping toggle would be, since
+         the two are mutually exclusive (a Main being edited already has its Subs; a new record
+         still gets to choose). Replaces the old subCsBanner's "+ Add Sub Care Setting" button. -->
+    <div id="mainEditAddSubRow" class="section-toolbar" style="display:none;">
+      <span style="font-weight:600;color:#000;font-size:var(--text-sm);">Sub Care Settings</span>
+      <button type="button" class="btn tertiary small" onclick="openAddSubToMain(editingMainId)">+ Add Sub Care Setting</button>
     </div>
     <div class="field full" id="groupModeField" style="margin:0 0 18px;">
       <div style="display:flex; align-items:center; gap:8px; padding:2px 0 6px;">
@@ -377,8 +390,13 @@ strong{font-weight:600}
     <div class="modal-body">
       <div class="filters" style="margin-bottom:10px;">
         <input class="text" type="text" id="auditSearchInput" placeholder="Search activity" style="max-width:260px;" oninput="renderAuditHistory()">
+        <!-- Phase 3: Main's combined log has no search — a dropdown scoped to "All / Main / each
+             Sub" instead, since the whole point is filtering by which record an event belongs to,
+             not free-text. Hidden/shown opposite auditSearchInput depending on which record this
+             modal was opened for. -->
+        <select class="control compact" id="auditFilterSelect" style="display:none;" onchange="renderAuditHistory()"></select>
       </div>
-      <table class="history"><thead><tr><th>Date</th><th>Event</th><th>By</th></tr></thead><tbody id="auditHistoryBody"></tbody></table>
+      <table class="history"><thead><tr><th>Date</th><th>Event</th><th id="auditSourceHeader" style="display:none;">Care Setting</th><th>By</th></tr></thead><tbody id="auditHistoryBody"></tbody></table>
     </div>
     <div class="modal-foot"><button class="btn" type="button" onclick="closeAuditHistory()">Close</button></div>
   </section>
@@ -395,6 +413,9 @@ const ICONS = {
   // Distinct from the plain "x" — used only for removing a whole container (Facility, Unit) and
   // everything nested inside it, so it reads as more consequential than removing one line item.
   trash: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L13.882 4zM2.5 3h11V2h-11z"/></svg>',
+  // Accordion open/close indicator — used on every collapsible sub-card (create-mode
+  // sub-settings and the Phase 3 Main-edit accordion below) so both share one glyph.
+  chevronDown: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/></svg>',
   // Used only for removing a single line item (one Resource row) — visually lighter than trash so
   // a Unit full of resource rows doesn't read as a wall of identical destructive icons.
   dashCircle: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-dash-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/></svg>'
@@ -445,12 +466,43 @@ function dep(list) {
 // old name-derived codes — every Care Setting gets a stable, human-scannable reference that has
 // never depended on what it's called. Confirmed no duplicate Short Names exist in this seed set
 // before Short Name uniqueness enforcement went live (Phase 1, decision on data conflicts).
+//
+// Phase 3 demo set — deliberately shaped to exercise every branch of the Main-edit accordion in
+// one place, rather than being arbitrary sample data:
+//   - 4 standalone Care Settings (Endoscopy, Cath Lab, OR, ED) with no Main — the ungrouped path,
+//     unchanged in this phase.
+//   - 1 Main ("Inpatient" / IP) with 4 Sub Care Settings covering all four statuses at once:
+//       ICU            active    — 3 Trackerboards (2 active, 1 draft): exercises the "+N more"
+//                                  popover on the dashboard and a multi-row table in the accordion.
+//       Maternity      inactive  — 1 active Trackerboard: proves the accordion's Trackerboard
+//                                  table shows on an inactive Sub too (decision: shown whenever
+//                                  any Trackerboard is active, regardless of the Sub's own status).
+//       Hospitalization draft    — 0 Trackerboards (a Draft can never have one — see
+//                                  updateStubSectionVisibility): exercises the accordion's empty
+//                                  state on an otherwise-editable card.
+//       Neonatal       retired   — 0 Trackerboards: exercises the empty state AND the read-only
+//                                  lock (retired records can't be edited, in the accordion same as
+//                                  the old single-record drawer).
+//   Maternity carries the latest "updated" date of the four, so it's also what proves out Main's
+//   derived Updated On/By (decision: mirrors whichever child was touched most recently).
 const CARE_SETTINGS = [
   { name: "ED", code: "CS-000001", shortName: "ED", status: "active", updated: "2026-07-24", by: "James Weaver",
     visitCategory: "Urgent", duration: { value: 60, unit: "minutes" }, chiefComplaintForm: "form-ed-triage",
     dependencies: dep([{ name: "ED Fast Track", facility: "Main Campus", status: "active" }]) },
 
-  { name: "ICU", code: "CS-000002", shortName: "ICU", status: "active", updated: "2026-07-18", by: "Amanda Carter",
+  { name: "Endoscopy", code: "CS-000002", shortName: "Endo", status: "draft", updated: "2026-07-28", by: "Robert Hayes",
+    visitCategory: "New Patient", duration: { value: 6, unit: "hours" }, chiefComplaintForm: "form-endo-triage",
+    dependencies: dep([]) },
+
+  { name: "Cath Lab", code: "CS-000003", shortName: "Cath", status: "retired", updated: "2026-06-10", by: "Robert Hayes",
+    visitCategory: "Procedure", duration: { value: 60, unit: "minutes" }, chiefComplaintForm: "form-none",
+    dependencies: dep([]) },
+
+  { name: "OR", code: "CS-000004", shortName: "OR", status: "active", updated: "2026-07-22", by: "James Weaver",
+    visitCategory: "Procedure", duration: { value: 90, unit: "minutes" }, chiefComplaintForm: "form-none",
+    dependencies: dep([{ name: "OR Schedule Board", facility: "Main Campus", status: "active" }]) },
+
+  { name: "ICU", code: "CS-000005", shortName: "ICU", status: "active", updated: "2026-07-18", by: "Amanda Carter",
     visitCategory: "Urgent", duration: { value: 3, unit: "hours" }, chiefComplaintForm: "form-standard-complaint",
     dependencies: dep([
       { name: "ICU Daily Rounds", facility: "Main Campus", status: "active" },
@@ -458,45 +510,28 @@ const CARE_SETTINGS = [
       { name: "ICU Overflow", facility: "North Wing", status: "draft" }
     ]), mainId: "MAIN-0001" },
 
-  { name: "PICU", code: "CS-000003", shortName: "PICU", status: "active", updated: "2026-07-19", by: "Amanda Carter",
-    visitCategory: "Urgent", duration: { value: 3, unit: "hours" }, chiefComplaintForm: "form-standard-complaint",
-    dependencies: dep([{ name: "PICU Rounds", facility: "Main Campus", status: "active" }]), mainId: "MAIN-0001" },
-
-  { name: "Step-Down", code: "CS-000004", shortName: "Step", status: "active", updated: "2026-07-20", by: "James Weaver",
-    visitCategory: "Follow-up", duration: { value: 2, unit: "hours" }, chiefComplaintForm: "form-standard-complaint",
-    dependencies: dep([{ name: "Step-Down Rounds", facility: "Main Campus", status: "active" }]) },
-
-  { name: "Maternity", code: "CS-000005", shortName: "Maternity", status: "inactive", updated: "2026-07-15", by: "Amanda Carter",
+  { name: "Maternity", code: "CS-000006", shortName: "Maternity", status: "inactive", updated: "2026-07-25", by: "Amanda Carter",
     visitCategory: "New Patient", duration: { value: 4, unit: "hours" }, chiefComplaintForm: "form-standard-complaint",
-    dependencies: dep([]) },
+    dependencies: dep([{ name: "Maternity Rounds", facility: "Main Campus", status: "active" }]), mainId: "MAIN-0001" },
 
-  { name: "NICU", code: "CS-000006", shortName: "NICU", status: "draft", updated: "2026-07-15", by: "Amanda Carter",
-    visitCategory: "New Patient", duration: { value: 1, unit: "hour" }, chiefComplaintForm: "form-none",
+  { name: "Hospitalization", code: "CS-000007", shortName: "Hosp", status: "draft", updated: "2026-07-10", by: "James Weaver",
+    visitCategory: "Follow-up", duration: { value: 4, unit: "hours" }, chiefComplaintForm: "form-standard-complaint",
     dependencies: dep([]), mainId: "MAIN-0001" },
 
-  { name: "General Medicine", code: "CS-000007", shortName: "Gen Med", status: "active", updated: "2026-07-12", by: "James Weaver",
-    visitCategory: "Follow-up", duration: { value: 4, unit: "hours" }, chiefComplaintForm: "form-standard-complaint",
-    dependencies: dep([{ name: "Med-Surg Rounds", facility: "Main Campus", status: "active" }]), mainId: "MAIN-0001" },
-
-  { name: "OR", code: "CS-000008", shortName: "OR", status: "active", updated: "2026-07-22", by: "James Weaver",
-    visitCategory: "Procedure", duration: { value: 90, unit: "minutes" }, chiefComplaintForm: "form-none",
-    dependencies: dep([{ name: "OR Schedule Board", facility: "Main Campus", status: "active" }]) },
-
-  { name: "Endoscopy", code: "CS-000009", shortName: "Endo", status: "draft", updated: "2026-07-28", by: "Robert Hayes",
-    visitCategory: "New Patient", duration: { value: 6, unit: "hours" }, chiefComplaintForm: "form-endo-triage",
-    dependencies: dep([]) },
-
-  { name: "Cath Lab", code: "CS-000010", shortName: "Cath", status: "retired", updated: "2026-06-10", by: "Robert Hayes",
-    visitCategory: "Procedure", duration: { value: 60, unit: "minutes" }, chiefComplaintForm: "form-none",
-    dependencies: dep([]) }
+  { name: "Neonatal", code: "CS-000008", shortName: "Neo", status: "retired", updated: "2026-06-05", by: "Robert Hayes",
+    visitCategory: "New Patient", duration: { value: 1, unit: "hours" }, chiefComplaintForm: "form-none",
+    dependencies: dep([]), mainId: "MAIN-0001" }
 ];
 
 // Phase 2 (decision 2.1, extended): a Main Care Setting is a real entity now, not a copied
 // string. It stays deliberately minimal — no status, no defaults, no dependencies, no
-// created-by/on, no Updated On/By — but does carry a Name and Short Name, same as any Care
-// Setting, since it needs to be editable and identifiable the same way. A Sub Care Setting
-// references its Main by ID rather than matching free text — which is what let "Inpatient" vs
-// "In-Patient" silently fragment into two groups before this change.
+// created-by/on — but does carry a Name and Short Name, same as any Care Setting, since it
+// needs to be editable and identifiable the same way. A Sub Care Setting references its Main by
+// ID rather than matching free text — which is what let "Inpatient" vs "In-Patient" silently
+// fragment into two groups before this change.
+// Phase 3: Main's dashboard row now surfaces an Updated On/By value after all — see
+// mainRowMeta() — but that's derived from its children on read, not a field stored here. Main
+// itself still carries nothing beyond identity and label.
 let MAIN_GROUPS = [
   { id: "MAIN-0001", label: "Inpatient", shortName: "IP" }
 ];
@@ -561,16 +596,17 @@ function lifecycleWarning(cs, action) {
   return `"${cs.name}" won't be available for new use. Anything already using it keeps working.`;
 }
 
-const state = { status: "draft", dirty: false, readonly: false, suppressTrack: false, touched: new Set(), blocking: 0, sort: "updated", dir: "desc", page: 1, pageSize: 10 };
+// state.mode: "single" (normal create/edit drawer — the default) or "mainEdit" (Phase 3 — the
+// unified drawer for a Main and all its Sub Care Settings; see openMainEditDrawer).
+const state = { mode: "single", status: "draft", dirty: false, readonly: false, suppressTrack: false, touched: new Set(), blocking: 0, sort: "updated", dir: "desc", page: 1, pageSize: 10 };
 let editingIndex = null;
+// Phase 3: which Main is open in the unified Main-edit drawer. Mirrors editingIndex's role for
+// the single-record drawer, just keyed by Main id instead of a CARE_SETTINGS array index.
+let editingMainId = null;
 // Phase 2: set while the drawer is open specifically via "Add Sub Care Setting" from an existing
 // sibling's edit view. Non-null means this is always a brand-new record joining that one
 // specific, already-existing Main by reference — never by retyping its label.
 let addToMainId = null;
-// Holds which Main the (currently open, existing) Sub Care Setting belongs to, so the
-// "+ Add Sub Care Setting to this Main" button in the locked-group note (static markup) knows
-// which Main to pass to openAddSubToMain() when clicked.
-let pendingAddToMainId = null;
 
 function optionsHtml(items) { return items.map(v => `<option>${v}</option>`).join(""); }
 function formOptionsHtml(items) { return items.map(f => `<option value="${f.id}">${f.name}</option>`).join(""); }
@@ -644,9 +680,28 @@ function activeTrackerboardCellHtml(cs) {
       <span class="info-popover">${popoverList("Also active on", rest.map(t => t.name))}</span>
     </span>`;
 }
-function rowActionsHtml(cs, idx) {
+// Phase 3: single dispatcher for "Edit" on any Care Setting row — used by the dashboard table,
+// this same rowActionsHtml() menu when it's reused inside a Main-edit accordion card, and the
+// row click handler below. A Sub Care Setting (has mainId) now always edits through the unified
+// Main drawer, expanded to that Sub; a standalone Care Setting keeps the existing single-record
+// drawer untouched.
+function editCareSetting(idx) {
+  const cs = CARE_SETTINGS[idx];
+  if (!cs) return;
+  if (cs.mainId) openMainEditDrawer(cs.mainId, { expandCode: cs.code });
+  else openPanel(cs, idx);
+}
+// Phase 3 (revised): rowActionsHtml is shared by the dashboard table AND a Sub's own menu inside
+// the Main-edit accordion. Inside the accordion, "Edit" would be a second way to do exactly what
+// clicking the card header already does (expand it) — worse, since it's wired to reopen/rebuild
+// the whole drawer, clicking it there would silently discard any unsaved typing sitting in other
+// cards. opts.hideEdit drops it for that one context; the dashboard's own row/menu still gets it,
+// since that's the only way in to begin with.
+function rowActionsHtml(cs, idx, opts) {
+  opts = opts || {};
   const noDeps = !hasAnyDeps(csDependencies(cs));
-  const items = [`<button type="button" onclick="event.stopPropagation(); closeRowMenus(); openPanel(CARE_SETTINGS[${idx}], ${idx})">Edit</button>`];
+  const items = [];
+  if (!opts.hideEdit) items.push(`<button type="button" onclick="event.stopPropagation(); closeRowMenus(); editCareSetting(${idx})">Edit</button>`);
   if (cs.status === "active") {
     items.push(`<button type="button" onclick="event.stopPropagation(); closeRowMenus(); quickInactivate(${idx})">Deactivate</button>`);
   } else if (cs.status === "inactive") {
@@ -660,6 +715,29 @@ function rowActionsHtml(cs, idx) {
   return `
     <span class="menu-wrap">
       <button class="icon-btn" type="button" aria-label="Actions for ${cs.name}" onclick="toggleRowMenu(this, event)">${ICONS.threeDotsVertical}</button>
+      <span class="menu">${items.join("")}</span>
+    </span>`;
+}
+// Phase 3: Main has no Updated On/By of its own — this surfaces whichever child was touched
+// most recently, the same "liveliest member" comparison entryValue() already used to position
+// the group in sort order, just exposed as a value instead of staying internal to sorting.
+function mainRowMeta(children) {
+  return children.reduce((best, c) => {
+    if (!best || (c.cs.updated || "") > best.updated) return { updated: c.cs.updated || "", by: c.cs.by || "" };
+    return best;
+  }, null) || { updated: "", by: "" };
+}
+// Phase 3: Main's own row menu — deliberately just Edit and View activity log. Main carries no
+// status, so it has nothing to deactivate/reactivate/retire/delete; those stay per-Sub actions
+// (see rowActionsHtml), each Sub owning its own risk, with no cascade from Main.
+function mainRowActionsHtml(mainId) {
+  const items = [
+    `<button type="button" onclick="event.stopPropagation(); closeRowMenus(); openMainEditDrawer('${mainId}')">Edit</button>`,
+    `<button type="button" onclick="event.stopPropagation(); closeRowMenus(); openMainActivityLog('${mainId}')">View activity log</button>`
+  ];
+  return `
+    <span class="menu-wrap">
+      <button class="icon-btn" type="button" aria-label="Actions for ${mainLabel(mainId)}" onclick="event.stopPropagation(); toggleRowMenu(this, event)">${ICONS.threeDotsVertical}</button>
       <span class="menu">${items.join("")}</span>
     </span>`;
 }
@@ -838,7 +916,7 @@ function renderTable() {
     const rowHtml = (cs, idx, isChild) => {
       const tr = document.createElement("tr");
       if (isChild) tr.className = "group-child-row";
-      tr.onclick = () => openPanel(cs, idx);
+      tr.onclick = () => editCareSetting(idx);
       tr.innerHTML = `
         <td><span class="cell-title">${cs.name}</span></td>
         <td>${cs.shortName || "—"}</td>
@@ -861,10 +939,15 @@ function renderTable() {
       const groupTr = document.createElement("tr");
       groupTr.className = "group-row" + (isOpen ? " open" : "");
       groupTr.onclick = () => toggleGroupRow(entry.mainId);
+      const meta = mainRowMeta(entry.children);
       groupTr.innerHTML = `
         <td><span class="group-chevron"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/></svg></span><span class="cell-title">${entry.groupName}</span><span class="cell-meta">${entry.children.length} sub-settings</span></td>
-        <td>${entry.shortName || "—"}</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
-        <td class="actions"></td>
+        <td>${entry.shortName || "—"}</td>
+        <td>—</td><td>—</td><td>—</td>
+        <td>${meta.updated || "—"}</td>
+        <td>${meta.by || "—"}</td>
+        <td>—</td>
+        <td class="actions">${mainRowActionsHtml(entry.mainId)}</td>
       `;
       tbody.appendChild(groupTr);
       if (isOpen) {
@@ -881,6 +964,19 @@ function renderTable() {
   document.getElementById("lastPage").disabled = state.page >= pages;
   state.lastPages = pages;
 }
+// Phase 3 (revised): every quick action below can be triggered from the dashboard row menu OR
+// from a Sub's own menu inside the Main-edit accordion (rowActionsHtml is shared by both). The
+// dashboard always fully re-renders — its rows aren't editable, so there's nothing to lose there.
+// The accordion is different: with per-card Save now real, a card can be sitting mid-edit,
+// unsaved, at the exact moment a *different* card's status changes. So a status change here only
+// ever touches that one card's own status-derived chrome (pill, menu, lock state) — never any
+// input field's value, on that card or any other — and a delete removes just that one card's DOM
+// node. Nobody's unsaved typing anywhere else in the drawer is ever at risk from this.
+function afterCareSettingMutation(mainId, code) {
+  renderTable();
+  if (!(mainId && state.mode === "mainEdit" && editingMainId === mainId)) return;
+  refreshSubCardChrome(mainId, code);
+}
 async function quickInactivate(idx) {
   const cs = CARE_SETTINGS[idx];
   if (!cs || cs.status !== "active") return;
@@ -889,7 +985,7 @@ async function quickInactivate(idx) {
   cs.status = "inactive";
   cs.updated = TODAY_STR; cs.by = CURRENT_USER;
   logAuditEvent(cs.code, "Deactivated");
-  renderTable();
+  afterCareSettingMutation(cs.mainId, cs.code);
   toast("Care Setting deactivated.");
 }
 async function quickReactivate(idx) {
@@ -899,7 +995,7 @@ async function quickReactivate(idx) {
   cs.status = "active";
   cs.updated = TODAY_STR; cs.by = CURRENT_USER;
   logAuditEvent(cs.code, "Reactivated");
-  renderTable();
+  afterCareSettingMutation(cs.mainId, cs.code);
   toast("Care Setting reactivated.");
 }
 async function retireRow(idx) {
@@ -909,7 +1005,7 @@ async function retireRow(idx) {
   cs.status = "retired";
   cs.updated = TODAY_STR; cs.by = CURRENT_USER;
   logAuditEvent(cs.code, "Retired");
-  renderTable();
+  afterCareSettingMutation(cs.mainId, cs.code);
   toast("Care Setting retired.");
 }
 async function quickDelete(idx) {
@@ -919,6 +1015,7 @@ async function quickDelete(idx) {
   if (!noDeps) return;
   if (await confirmBox("Delete draft Care Setting?", lifecycleWarning(cs, "delete"), "Delete", true)) {
     const mainId = cs.mainId;
+    const code = cs.code;
     CARE_SETTINGS.splice(idx, 1);
     // If that was the only Sub Care Setting in its Main, the Main goes with it — a Main with no
     // members isn't a group anymore, and its name is freed up rather than left permanently
@@ -928,9 +1025,14 @@ async function quickDelete(idx) {
       const label = mainLabel(mainId);
       MAIN_GROUPS = MAIN_GROUPS.filter(m => m.id !== mainId);
       mainDeleted = true;
+      // The Main-edit drawer can't stay open on a Main that no longer exists.
+      if (state.mode === "mainEdit" && editingMainId === mainId) closePanel();
       toast(`Draft deleted. "${label}" had no other Sub Care Settings, so it's gone too.`);
     }
     renderTable();
+    if (!mainDeleted && mainId && state.mode === "mainEdit" && editingMainId === mainId) {
+      removeSubCardFromDrawer(mainId, code);
+    }
     if (!mainDeleted) toast("Draft deleted.");
   }
 }
@@ -1133,7 +1235,7 @@ function subSettingBlockHtml(subId) {
   return `
   <section class="card" data-sub-id="${subId}">
     <header class="card-head" onclick="toggleReferenceSection(this)">
-      <h2 class="card-title"><span class="card-chevron"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/></svg></span> <span id="${scope}heading">Sub Care Setting</span></h2>
+      <h2 class="card-title"><span class="card-chevron">${ICONS.chevronDown}</span> <span id="${scope}heading">Sub Care Setting</span></h2>
       <button class="icon-btn mini danger-icon sub-setting-remove-block" type="button" aria-label="Remove sub-setting" onclick="event.stopPropagation(); removeSubSettingBlock('${subId}')">${ICONS.trash}</button>
     </header>
     <div class="card-body">
@@ -1345,7 +1447,371 @@ async function activateGroup() {
   closePanel();
 }
 
+/* ---------- Phase 3: Main-edit mode (unified drawer for an existing Main + its Subs) ----------
+   Editing an already-existing Main and its Sub Care Settings used to mean opening each one's own
+   full drawer separately. This reuses the same drawer shell instead: the top-level Name/Short
+   Name fields (nameField/shortNameField) hold the MAIN's own identity, and every Sub renders as
+   its own collapsible accordion card below — same visual pattern as the create-mode sub-setting
+   cards (subSettingBlockHtml), but scoped by the Sub's real CARE_SETTINGS code instead of a
+   throwaway creation-time id, since these are real, already-saved records being edited in place,
+   not new ones being assembled.
+   Unlike create mode, membership is fixed here — this never adds or removes which Subs exist
+   (that's "+ Add Sub Care Setting", a separate, existing flow), it only edits their fields and
+   the Main's own Name/Short Name, and lets each Sub's own status actions run inline.
+   Revised: each Sub card now saves independently (its own Cancel/Save footer) as well as through
+   the drawer's own "Save Changes" (which re-runs the same per-card commit across every card, plus
+   Main, still all-or-nothing on validation). Because a card can sit mid-edit, unsaved, for a
+   while now, subEditSnapshots tracks each card's last-committed values so an unsaved-changes
+   indicator can show on a collapsed card, and so any refresh triggered by a DIFFERENT card's
+   status action never has to touch — and risk wiping — this one's in-progress typing. */
+function subEditScope(code) { return "subedit_" + String(code).replace(/[^A-Za-z0-9]/g, "") + "_"; }
+function snapshotSubCard(cs) {
+  return { name: cs.name, shortName: cs.shortName || "", visitCategory: cs.visitCategory,
+    duration: { value: String(cs.duration.value), unit: cs.duration.unit }, chiefComplaintForm: cs.chiefComplaintForm };
+}
+function currentSubCardValues(code) {
+  const scope = subEditScope(code);
+  return {
+    name: document.getElementById(scope + "nameField").value.trim(),
+    shortName: document.getElementById(scope + "shortNameField").value.trim(),
+    visitCategory: document.getElementById(scope + "defaultVisitCategory").value,
+    duration: { value: document.getElementById(scope + "defaultDurationValue").value, unit: document.getElementById(scope + "defaultDurationUnit").value },
+    chiefComplaintForm: document.getElementById(scope + "chiefComplaintForm").value
+  };
+}
+// code -> last-committed values for every rendered Sub card, set on every (re)build and updated
+// after each successful save. The sole source of truth for "does this card have unsaved edits" —
+// deliberately not derived from state.touched/state.dirty, which are coarser (whole-drawer) flags.
+let subEditSnapshots = {};
+function subCardIsDirty(code) {
+  const snap = subEditSnapshots[code];
+  if (!snap) return false;
+  const cur = currentSubCardValues(code);
+  return cur.name !== snap.name || cur.shortName !== snap.shortName || cur.visitCategory !== snap.visitCategory
+    || String(cur.duration.value) !== String(snap.duration.value) || cur.duration.unit !== snap.duration.unit
+    || cur.chiefComplaintForm !== snap.chiefComplaintForm;
+}
+function updateUnsavedIndicator(code) {
+  const el = document.getElementById(subEditScope(code) + "unsavedTag");
+  if (el) el.style.display = subCardIsDirty(code) ? "" : "none";
+}
+// state.dirty (used by requestClose's discard-confirmation) is normally just set true by any
+// input anywhere in the drawer and never re-checked. In Main-edit mode specifically, an
+// individual card Save can legitimately bring the drawer back to "nothing unsaved" without the
+// drawer being closed — so recompute it properly here instead of leaving it stuck at true.
+function recomputeGlobalDirty() {
+  if (state.mode !== "mainEdit") return;
+  const main = MAIN_GROUPS.find(m => m.id === editingMainId);
+  const mainDirty = !!main && (document.getElementById("nameField").value.trim() !== main.label
+    || document.getElementById("shortNameField").value.trim() !== (main.shortName || ""));
+  const anyCardDirty = Object.keys(subEditSnapshots).some(subCardIsDirty);
+  state.dirty = mainDirty || anyCardDirty;
+}
+// Fires on every field change inside a Sub's card (see subEditCardHtml) — keeps the card's
+// heading in sync with a live-typed Name and refreshes its unsaved indicator/global dirty state.
+function onSubEditFieldChange(code) {
+  const scope = subEditScope(code);
+  const heading = document.getElementById(scope + "heading");
+  const nameField = document.getElementById(scope + "nameField");
+  if (heading && nameField) heading.textContent = nameField.value.trim() || "Sub Care Setting";
+  updateUnsavedIndicator(code);
+  recomputeGlobalDirty();
+}
+// A retired record can't be edited — same rule the single-record drawer already enforces (its
+// footer drops every button but Cancel once state.status === "retired"). Here that's per-card
+// instead of per-drawer: the card still renders (so its history/status stay visible) but every
+// field is disabled, it has no Save/Cancel footer, and it's excluded from both individual and
+// drawer-wide Save.
+function subEditCardHtml(cs, idx, expanded) {
+  const scope = subEditScope(cs.code);
+  const locked = cs.status === "retired";
+  const disabledAttr = locked ? "disabled" : "";
+  const d = csDependencies(cs);
+  const activeTbs = (d.trackerboards.list || []).filter(t => t.status === "active");
+  // Decision: shown whenever the Sub has any active Trackerboard, regardless of the Sub's own
+  // status (an inactive/retired Sub can still be referenced by one that's still active) — never
+  // conditioned on this Sub's status the way the single-record drawer's dependency section is.
+  const tbSection = activeTbs.length
+    ? `<div style="border:1px solid var(--line);overflow:hidden;"><table class="table"><thead><tr><th>Trackerboard</th><th>Facility</th><th>Status</th></tr></thead><tbody>${activeTbs.map(t => `<tr><td>${t.name}</td><td>${t.facility}</td><td><span class="pill active">Active</span></td></tr>`).join("")}</tbody></table></div>`
+    : emptyStateNote("No associated Trackerboards for this Care Setting.");
+  return `
+  <section class="card sub-edit-card${expanded ? "" : " collapsed"}" data-cs-code="${cs.code}">
+    <header class="card-head" onclick="toggleReferenceSection(this)">
+      <h2 class="card-title">
+        <span class="card-chevron">${ICONS.chevronDown}</span>
+        <span id="${scope}heading">${cs.name}</span>
+        <span id="${scope}pill" class="pill ${cs.status}">${cs.status.charAt(0).toUpperCase() + cs.status.slice(1)}</span>
+        <span id="${scope}unsavedTag" class="sub-edit-unsaved" style="display:none;">Unsaved</span>
+      </h2>
+      <span id="${scope}menuSlot" onclick="event.stopPropagation();">${rowActionsHtml(cs, idx, { hideEdit: true })}</span>
+    </header>
+    <div class="card-body">
+      <p class="note mb-2" id="${scope}lockNote" style="display:${locked ? "" : "none"};">Retired records can't be edited.</p>
+      <div class="form-grid">
+        <div class="field">
+          <label for="${scope}nameField">Name <span class="req">*</span></label>
+          <input type="text" id="${scope}nameField" value="${cs.name}" ${disabledAttr} oninput="onSubEditFieldChange('${cs.code}')" aria-describedby="${scope}nameFieldError">
+          <div class="field-error" id="${scope}nameFieldError"></div>
+        </div>
+        <div class="field">
+          <label for="${scope}shortNameField">Short Name</label>
+          <input type="text" id="${scope}shortNameField" value="${cs.shortName || ""}" ${disabledAttr} oninput="onSubEditFieldChange('${cs.code}')" aria-describedby="${scope}shortNameFieldError">
+          <div class="field-error" id="${scope}shortNameFieldError"></div>
+        </div>
+      </div>
+      <hr style="border:none;border-top:1px solid #edf0f2;margin:16px 0;">
+      <h3 style="margin:0 0 10px; font-size:var(--text-base); font-weight:600;">Visit Defaults</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label for="${scope}defaultVisitCategory">Default Visit Category</label>
+          <select id="${scope}defaultVisitCategory" ${disabledAttr} onchange="onSubEditFieldChange('${cs.code}')">${optionsHtml(VISIT_CATEGORIES)}</select>
+        </div>
+        <div class="field">
+          <label for="${scope}defaultDurationValue">Duration</label>
+          <div class="inline-pair">
+            <input type="number" id="${scope}defaultDurationValue" min="1" value="${cs.duration.value}" ${disabledAttr} oninput="onSubEditFieldChange('${cs.code}')">
+            <select id="${scope}defaultDurationUnit" ${disabledAttr} onchange="onSubEditFieldChange('${cs.code}')"><option>minutes</option><option>hours</option></select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="${scope}chiefComplaintForm">Intake Form</label>
+          <select id="${scope}chiefComplaintForm" ${disabledAttr} onchange="onSubEditFieldChange('${cs.code}')">${formOptionsHtml(CHIEF_COMPLAINT_FORMS)}</select>
+        </div>
+      </div>
+      <hr style="border:none;border-top:1px solid #edf0f2;margin:16px 0;">
+      <h3 style="margin:0 0 10px; font-size:var(--text-base); font-weight:600;">Active Trackerboards</h3>
+      ${tbSection}
+      <div class="sub-edit-footer" id="${scope}footer" style="display:${locked ? "none" : "flex"};">
+        <button type="button" class="btn tertiary" onclick="cancelSubCard('${cs.code}')">Cancel</button>
+        <button type="button" class="btn primary" onclick="saveSubCard('${cs.code}')">Save</button>
+      </div>
+    </div>
+  </section>`;
+}
+// Reverts one card's fields to its last-saved values — leaves it expanded (Cancel means "undo my
+// typing", not "collapse and hide the record").
+function cancelSubCard(code) {
+  const snap = subEditSnapshots[code];
+  if (!snap) return;
+  const scope = subEditScope(code);
+  document.getElementById(scope + "nameField").value = snap.name;
+  document.getElementById(scope + "shortNameField").value = snap.shortName;
+  document.getElementById(scope + "defaultVisitCategory").value = snap.visitCategory;
+  document.getElementById(scope + "defaultDurationValue").value = snap.duration.value;
+  document.getElementById(scope + "defaultDurationUnit").value = snap.duration.unit;
+  document.getElementById(scope + "chiefComplaintForm").value = snap.chiefComplaintForm;
+  showFieldError(scope + "nameField", "");
+  showFieldError(scope + "shortNameField", "");
+  onSubEditFieldChange(code);
+}
+// Shared by saveSubCard() (one card) and saveMainEdit() (every card, in a loop) — one card's
+// worth of validate-then-commit. Returns true if the card is now clean (either it had nothing to
+// change, or the change was validated and written); false means Save should stop here — either a
+// field error (shown inline) or the user declined a rename confirmation.
+async function commitSubCard(code) {
+  const idx = CARE_SETTINGS.findIndex(c => c.code === code);
+  if (idx === -1) return true;
+  const existing = CARE_SETTINGS[idx];
+  if (existing.status === "retired") return true; // locked — never part of any save path
+  const scope = subEditScope(code);
+  const name = document.getElementById(scope + "nameField").value.trim();
+  const shortName = document.getElementById(scope + "shortNameField").value.trim();
+  const nameErr = !name ? "Care Setting Name is required." : (isNameTaken(name, idx) ? "This name is already in use." : "");
+  const shortErr = (shortName && isNameTaken(shortName, idx)) ? "This Short Name is already in use." : "";
+  showFieldError(scope + "nameField", nameErr);
+  showFieldError(scope + "shortNameField", shortErr);
+  if (nameErr || shortErr) return false;
 
+  const updated = {
+    ...existing, name, shortName,
+    visitCategory: document.getElementById(scope + "defaultVisitCategory").value,
+    duration: { value: document.getElementById(scope + "defaultDurationValue").value, unit: document.getElementById(scope + "defaultDurationUnit").value },
+    chiefComplaintForm: document.getElementById(scope + "chiefComplaintForm").value
+  };
+  const changed = updated.name !== existing.name || updated.shortName !== existing.shortName
+    || updated.visitCategory !== existing.visitCategory || updated.chiefComplaintForm !== existing.chiefComplaintForm
+    || String(updated.duration.value) !== String(existing.duration.value) || updated.duration.unit !== existing.duration.unit;
+  if (!changed) return true;
+
+  // Same rename-vs-active-Trackerboard confirmation the single-record drawer already has — now
+  // restored for per-card Save, and reused (sequentially, one dialog per affected card) by
+  // saveMainEdit()'s batch loop too, rather than building a separate combined-summary dialog.
+  if (updated.name !== existing.name) {
+    const activeTb = csDependencies(existing).trackerboards.active;
+    if (activeTb) {
+      const proceed = await confirmBox(
+        "Rename this Care Setting?",
+        `${activeTb} active Trackerboard${activeTb === 1 ? "" : "s"} reference "${existing.name}". Renaming it to "${updated.name}" relabels what they point to. Continue?`,
+        "Rename", true
+      );
+      if (!proceed) return false;
+    }
+  }
+
+  updated.updated = TODAY_STR;
+  updated.by = CURRENT_USER;
+  CARE_SETTINGS[idx] = updated;
+  logAuditEvent(updated.code, updated.name !== existing.name ? "Renamed" : "Updated");
+  subEditSnapshots[code] = snapshotSubCard(updated);
+  const headingEl = document.getElementById(scope + "heading");
+  if (headingEl) headingEl.textContent = updated.name;
+  updateUnsavedIndicator(code);
+  return true;
+}
+async function saveSubCard(code) {
+  const ok = await commitSubCard(code);
+  if (!ok) return;
+  recomputeGlobalDirty();
+  renderTable();
+  const cs = CARE_SETTINGS.find(c => c.code === code);
+  toast(cs ? `"${cs.name}" saved.` : "Saved.");
+}
+// Rebuilds every Sub's accordion card under a Main from scratch — only ever called when the
+// drawer itself is (re)opened, never as a way to reflect a status change on an already-open
+// drawer (that's refreshSubCardChrome, which never touches field values). opts.expandCode
+// expands one specific card, for arriving via that Sub's own Edit.
+function renderMainEditSubs(mainId, opts) {
+  opts = opts || {};
+  const container = document.getElementById("subSettingsContainer");
+  const children = CARE_SETTINGS.filter(c => c.mainId === mainId);
+  container.innerHTML = children.map(cs => subEditCardHtml(cs, CARE_SETTINGS.indexOf(cs), cs.code === opts.expandCode)).join("");
+  subEditSnapshots = {};
+  // <select> options can't carry a chosen value through the HTML string above (no "selected"
+  // attribute is set per option, same constraint the create-mode sub cards have) — set .value on
+  // each once the markup is actually in the DOM, then take the snapshot once everything (selects
+  // included) reflects the real record.
+  children.forEach(cs => {
+    const scope = subEditScope(cs.code);
+    document.getElementById(scope + "defaultVisitCategory").value = cs.visitCategory;
+    document.getElementById(scope + "defaultDurationUnit").value = cs.duration.unit;
+    document.getElementById(scope + "chiefComplaintForm").value = cs.chiefComplaintForm;
+    subEditSnapshots[cs.code] = snapshotSubCard(cs);
+  });
+}
+// Refreshes ONE card's status-derived chrome (pill, menu, lock state, footer visibility) after a
+// status action (Deactivate/Reactivate/Retire) — deliberately never touches any input's value, on
+// this card or any other, so it's safe to call while a different card sits mid-edit, unsaved.
+function refreshSubCardChrome(mainId, code) {
+  if (!(state.mode === "mainEdit" && editingMainId === mainId)) return;
+  const scope = subEditScope(code);
+  const card = document.querySelector(`#subSettingsContainer [data-cs-code="${code}"]`);
+  const cs = CARE_SETTINGS.find(c => c.code === code);
+  if (!card || !cs) return;
+  const idx = CARE_SETTINGS.indexOf(cs);
+  const pillEl = document.getElementById(scope + "pill");
+  pillEl.className = "pill " + cs.status;
+  pillEl.textContent = cs.status.charAt(0).toUpperCase() + cs.status.slice(1);
+  document.getElementById(scope + "menuSlot").innerHTML = rowActionsHtml(cs, idx, { hideEdit: true });
+  const locked = cs.status === "retired";
+  card.querySelectorAll("input, select").forEach(el => { el.disabled = locked; });
+  const lockNote = document.getElementById(scope + "lockNote");
+  if (lockNote) lockNote.style.display = locked ? "" : "none";
+  const footer = document.getElementById(scope + "footer");
+  if (footer) footer.style.display = locked ? "none" : "flex";
+  if (locked) {
+    // Retiring ends this card's editability outright — nothing left to compare against, so drop
+    // its snapshot/indicator rather than leaving a stale "Unsaved" tag on a now-locked card.
+    delete subEditSnapshots[code];
+    const tag = document.getElementById(scope + "unsavedTag");
+    if (tag) tag.style.display = "none";
+    recomputeGlobalDirty();
+  }
+}
+// Removes one Sub's card entirely after it's deleted (quickDelete) — the record is gone, so
+// there's nothing left to refresh; every other card is untouched.
+function removeSubCardFromDrawer(mainId, code) {
+  if (!(state.mode === "mainEdit" && editingMainId === mainId)) return;
+  const card = document.querySelector(`#subSettingsContainer [data-cs-code="${code}"]`);
+  if (card) card.remove();
+  delete subEditSnapshots[code];
+  recomputeGlobalDirty();
+}
+// opts.expandCode: the Sub whose "Edit" was clicked to get here (left undefined/omitted when
+// arriving via the Main's own "Edit", where every Sub starts collapsed).
+function openMainEditDrawer(mainId, opts) {
+  opts = opts || {};
+  const main = MAIN_GROUPS.find(m => m.id === mainId);
+  if (!main) return;
+  editingIndex = null;
+  editingMainId = mainId;
+  addToMainId = null;
+  state.mode = "mainEdit";
+  state.suppressTrack = true;
+  state.dirty = false;
+  state.readonly = false;
+  state.touched = new Set();
+  state.blocking = 0;
+
+  document.getElementById("panelTitle").textContent = "Edit " + main.label;
+  document.getElementById("panel").classList.remove("readonly");
+
+  document.getElementById("groupModeField").style.display = "none";
+  document.getElementById("addToMainBanner").style.display = "none";
+  document.getElementById("mainEditAddSubRow").style.display = "";
+  document.getElementById("addSubSettingBtn").style.display = "none";
+
+  document.getElementById("nameFieldLabel").textContent = "Name";
+  document.getElementById("nameField").placeholder = "e.g. Inpatient";
+  document.getElementById("nameField").value = main.label;
+  document.getElementById("nameFieldSimilar").style.display = "none";
+  showFieldError("nameField", "");
+  const shortField = document.getElementById("shortNameField");
+  shortField.value = main.shortName || "";
+  shortField.dataset.manual = "true";
+  showFieldError("shortNameField", "");
+  renderPanelCodeSub(null);
+
+  // Main has neither Visit Defaults nor Trackerboards of its own — both belong to each Sub and
+  // render inside that Sub's own accordion card instead.
+  document.getElementById("sec-clinical").style.display = "none";
+  document.getElementById("sec-dependencies").style.display = "none";
+
+  renderMainEditSubs(mainId, { expandCode: opts.expandCode });
+
+  renderValidationState();
+  renderFooter();
+  document.getElementById("panel").classList.add("open");
+  document.getElementById("panel").setAttribute("aria-hidden", "false");
+  document.getElementById("overlay").classList.add("open");
+  state.suppressTrack = false;
+}
+// Drawer-wide Save: re-runs the exact same commitSubCard() used by each card's own Save, across
+// every non-retired card, plus Main's own Name/Short Name — still all-or-nothing, so a card
+// that's already been saved individually is just a no-op diff here, not a special case to skip.
+async function saveMainEdit() {
+  const mainId = editingMainId;
+  const main = MAIN_GROUPS.find(m => m.id === mainId);
+  if (!main) return;
+  state.touched.add("cardState-basic");
+
+  const newLabel = document.getElementById("nameField").value.trim();
+  const newShort = document.getElementById("shortNameField").value.trim();
+  const nameErr = !newLabel ? "Name is required." : (isNameTaken(newLabel, null, mainId) ? "This name is already in use." : "");
+  const shortErr = (newShort && isNameTaken(newShort, null, mainId)) ? "This Short Name is already in use." : "";
+  showFieldError("nameField", nameErr);
+  showFieldError("shortNameField", shortErr);
+  if (nameErr || shortErr) { document.getElementById("nameField").focus(); return; }
+
+  const codes = [...document.querySelectorAll("#subSettingsContainer [data-cs-code]")].map(c => c.dataset.csCode);
+  for (const code of codes) {
+    const ok = await commitSubCard(code);
+    if (!ok) {
+      const card = document.querySelector(`[data-cs-code="${code}"]`);
+      card.classList.remove("collapsed");
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+  }
+
+  const mainChanged = main.label !== newLabel || (main.shortName || "") !== newShort;
+  main.label = newLabel;
+  main.shortName = newShort;
+  if (mainChanged) logAuditEvent(mainId, "Renamed", newLabel);
+
+  recomputeGlobalDirty();
+  renderTable();
+  toast(`"${newLabel}" saved.`);
+}
 
 // Bound to #panelBody — the Care Setting drawer's own body. Deliberately NOT document.body:
 // markDirtyAndTrack sets state.dirty unconditionally, and the dashboard's own inputs (search,
@@ -1359,12 +1825,16 @@ function computeIssues() {
   const shortName = document.getElementById("shortNameField").value.trim();
   const basic = [];
   let shortNameDupe = false;
+  // Phase 3: in Main-edit mode, nameField/shortNameField hold the MAIN's own Name/Short Name
+  // (reused rather than duplicated — see openMainEditDrawer). Without excluding the Main's own
+  // id here, its current label would always collide with itself in isNameTaken().
+  const excludeMain = state.mode === "mainEdit" ? editingMainId : null;
   if (!name) basic.push("Care Setting Name is required.");
-  else if (isNameTaken(name, editingIndex)) basic.push("This name is already in use.");
+  else if (isNameTaken(name, editingIndex, excludeMain)) basic.push("This name is already in use.");
   // Short Name is optional, but once given, it must be unique — Trackerboard configuration
   // keys off Short Name internally, so a collision here isn't just cosmetic (Phase 1). Both
   // checks now run against the shared Name/Short Name/Main-label namespace (Phase 2, 2.5).
-  if (shortName && isNameTaken(shortName, editingIndex)) {
+  if (shortName && isNameTaken(shortName, editingIndex, excludeMain)) {
     basic.push("This Short Name is already in use.");
     shortNameDupe = true;
   }
@@ -1447,56 +1917,6 @@ function confirmBox(title, message, label, danger = false) {
     ]
   }));
 }
-// Phase 2: Main's rename "falls out for free" once it's a real, ID-based entity — this edits the
-// one MAIN_GROUPS entry, and every Sub referencing it by mainId reflects the new label
-// immediately, with no per-child editing required (unlike the old free-text-per-child model).
-// Phase 2: the Main-level "Edit" action — renames Name and/or Short Name. Falls out cleanly
-// once Main is a real entity: edit the one MAIN_GROUPS record, and every Sub referencing it by
-// mainId reflects the change immediately, with no per-child editing required.
-function editMainModal(mainId) {
-  const main = MAIN_GROUPS.find(m => m.id === mainId);
-  if (!main) return;
-  openModal({
-    title: "Edit Main Care Setting",
-    body: `<p style="margin:0 0 12px;line-height:1.5">This updates it everywhere — every Sub Care Setting under it reflects the change immediately.</p>
-      <div class="form-grid">
-        <div class="field">
-          <label for="editMainNameInput">Name</label>
-          <input type="text" id="editMainNameInput" class="text" value="${main.label}">
-          <div class="field-error" id="editMainNameError" style="display:block;color:var(--bad);font-size:var(--text-sm);margin-top:5px;"></div>
-        </div>
-        <div class="field">
-          <label for="editMainShortNameInput">Short Name</label>
-          <input type="text" id="editMainShortNameInput" class="text" value="${main.shortName || ""}">
-          <div class="field-error" id="editMainShortNameError" style="display:block;color:var(--bad);font-size:var(--text-sm);margin-top:5px;"></div>
-        </div>
-      </div>`,
-    actions: [
-      { label: "Cancel", handler: () => closeModal() },
-      { label: "Save", primary: true, handler: () => {
-          const newName = document.getElementById("editMainNameInput").value.trim();
-          const newShortName = document.getElementById("editMainShortNameInput").value.trim();
-          const nameErrEl = document.getElementById("editMainNameError");
-          const shortErrEl = document.getElementById("editMainShortNameError");
-          nameErrEl.textContent = "";
-          shortErrEl.textContent = "";
-          let hasError = false;
-          if (!newName) { nameErrEl.textContent = "Name is required."; hasError = true; }
-          else if (isNameTaken(newName, null, mainId)) { nameErrEl.textContent = "This name is already in use."; hasError = true; }
-          if (newShortName && isNameTaken(newShortName, null, mainId)) { shortErrEl.textContent = "This Short Name is already in use."; hasError = true; }
-          if (hasError) return;
-          main.label = newName;
-          main.shortName = newShortName;
-          closeModal();
-          renderTable();
-          if (document.getElementById("subCsBanner").style.display !== "none") {
-            document.getElementById("subCsBannerMainName").textContent = newName;
-          }
-          toast(`"${newName}" saved. All Sub Care Settings under it are updated.`);
-        } }
-    ]
-  });
-}
 function toast(message) {
   const el = document.createElement("div");
   el.className = "toast";
@@ -1507,17 +1927,72 @@ function toast(message) {
 
 /* ---------- Activity Log ---------- */
 let auditModalCode = null;
+// Phase 3: set instead of auditModalCode when the log was opened for a Main (combined view of
+// the Main's own rename events plus every Sub's events). The two are mutually exclusive — only
+// one is ever non-null at a time.
+let auditModalMainId = null;
 function openAuditHistory(idx) {
   const cs = CARE_SETTINGS[idx];
   if (!cs) return;
   auditModalCode = cs.code;
+  auditModalMainId = null;
   document.getElementById("auditModalName").textContent = cs.name;
+  document.getElementById("auditSearchInput").style.display = "";
   document.getElementById("auditSearchInput").value = "";
+  document.getElementById("auditFilterSelect").style.display = "none";
+  document.getElementById("auditSourceHeader").style.display = "none";
   renderAuditHistory();
   document.getElementById("auditModalBackdrop").classList.add("open");
   document.getElementById("auditModalBackdrop").setAttribute("aria-hidden", "false");
 }
+// Phase 3: the Main-level "View activity log" action — a combined feed of the Main's own rename
+// events plus every Sub's events, filterable by a dropdown (default All) rather than search.
+function openMainActivityLog(mainId) {
+  const main = MAIN_GROUPS.find(m => m.id === mainId);
+  if (!main) return;
+  auditModalMainId = mainId;
+  auditModalCode = null;
+  document.getElementById("auditModalName").textContent = main.label;
+  document.getElementById("auditSearchInput").style.display = "none";
+  const filterSelect = document.getElementById("auditFilterSelect");
+  filterSelect.style.display = "";
+  filterSelect.innerHTML = auditFilterOptionsHtml(mainId);
+  filterSelect.value = "all";
+  document.getElementById("auditSourceHeader").style.display = "";
+  renderAuditHistory();
+  document.getElementById("auditModalBackdrop").classList.add("open");
+  document.getElementById("auditModalBackdrop").setAttribute("aria-hidden", "false");
+}
+// Dropdown options for the combined log: All, then the Main by its Short Name (falling back to
+// its Name if it has none), then each Sub by name — in that fixed order, matching creation order
+// rather than being re-sorted, so the list doesn't reshuffle every time someone reopens it.
+function auditFilterOptionsHtml(mainId) {
+  const children = CARE_SETTINGS.filter(c => c.mainId === mainId);
+  const mainName = mainShortName(mainId) || mainLabel(mainId);
+  return `<option value="all">All</option><option value="main">${mainName}</option>`
+    + children.map(c => `<option value="${c.code}">${c.name}</option>`).join("");
+}
+// One combined, chronologically-unsorted event list for a Main: its own events (keyed in
+// AUDIT_LOG by mainId, same mechanism as a Care Setting's code) plus every child's events. Each
+// event carries filterKey (what the dropdown filters on) and sourceLabel (what the "Care
+// Setting" column displays) so rendering doesn't need to re-derive either.
+function mainAuditEvents(mainId) {
+  const children = CARE_SETTINGS.filter(c => c.mainId === mainId);
+  const mainEvents = (AUDIT_LOG[mainId] || []).map(e => ({ ...e, filterKey: "main", sourceLabel: mainShortName(mainId) || mainLabel(mainId) }));
+  const childEvents = children.flatMap(cs => {
+    // Same backfill as the single-record log: a seeded record that never went through
+    // logAuditEvent still gets one synthetic row reflecting its current state.
+    let events = AUDIT_LOG[cs.code] || [];
+    if (!events.length) {
+      const backfillEvent = cs.status === "active" ? "Activated" : cs.status === "inactive" ? "Deactivated" : cs.status === "retired" ? "Retired" : "Saved as Draft";
+      events = [{ date: cs.updated || "—", event: backfillEvent, detail: "", by: cs.by || CURRENT_USER }];
+    }
+    return events.map(e => ({ ...e, filterKey: cs.code, sourceLabel: cs.name }));
+  });
+  return mainEvents.concat(childEvents);
+}
 function renderAuditHistory() {
+  if (auditModalMainId) { renderMainAuditHistory(); return; }
   const cs = CARE_SETTINGS.find(c => c.code === auditModalCode);
   if (!cs) return;
   // Real events logged as they happened this session (see logAuditEvent). Seeded records never
@@ -1534,10 +2009,19 @@ function renderAuditHistory() {
     ? filtered.map(e => `<tr><td>${e.date}</td><td>${e.event}${e.detail ? ` <span class="muted">— ${e.detail}</span>` : ""}</td><td>${e.by}</td></tr>`).join("")
     : `<tr><td colspan="3" class="muted">No activity matches "${query}"</td></tr>`;
 }
+function renderMainAuditHistory() {
+  const filterVal = document.getElementById("auditFilterSelect").value || "all";
+  const all = mainAuditEvents(auditModalMainId);
+  const filtered = filterVal === "all" ? all : all.filter(e => e.filterKey === filterVal);
+  document.getElementById("auditHistoryBody").innerHTML = filtered.length
+    ? filtered.map(e => `<tr><td>${e.date}</td><td>${e.event}${e.detail ? ` <span class="muted">— ${e.detail}</span>` : ""}</td><td>${e.sourceLabel}</td><td>${e.by}</td></tr>`).join("")
+    : `<tr><td colspan="4" class="muted">No activity yet.</td></tr>`;
+}
 function closeAuditHistory() {
   document.getElementById("auditModalBackdrop").classList.remove("open");
   document.getElementById("auditModalBackdrop").setAttribute("aria-hidden", "true");
   auditModalCode = null;
+  auditModalMainId = null;
 }
 
 function touchSection(dot) {
@@ -1563,6 +2047,16 @@ function renderStatusBadge() {
 function renderFooter() {
   const footer = document.getElementById("panelFooter");
   if (state.readonly) { footer.innerHTML = `<button class="btn" onclick="requestClose()">Close</button>`; return; }
+  if (state.mode === "mainEdit") {
+    // Phase 3: one Save writes the Main's Name/Short Name plus every non-retired Sub's fields
+    // in a single batch — see saveMainEdit(). Status changes (Deactivate/Reactivate/Retire/
+    // Delete) happen immediately from each Sub's own menu instead, same as they always have.
+    footer.innerHTML = `<div style="display:flex; gap:8px; margin-left:auto;">
+      <button class="btn tertiary" onclick="requestClose()">Cancel</button>
+      <button class="btn primary" onclick="saveMainEdit()">Save Changes</button>
+    </div>`;
+    return;
+  }
   if (isGroupCreateMode()) {
     const subCount = document.querySelectorAll("[data-sub-id]").length;
     const cancelBtn = `<button class="btn tertiary" onclick="requestClose()">Cancel</button>`;
@@ -1712,22 +2206,25 @@ function closePanel() {
 let addSubOrigin = null;
 async function openAddSubToMain(mainId) {
   if (!mainId) return;
-  if (state.dirty && !(await confirmBox("Discard unsaved changes?", "Your changes on this Care Setting won't be saved.", "Discard and continue", true))) return;
-  // Remember where this was opened from, so "← Back" can return to that same record instead of
-  // just closing the drawer outright.
-  addSubOrigin = editingIndex !== null ? { idx: editingIndex } : null;
+  if (state.dirty && !(await confirmBox("Discard unsaved changes?", "Your changes won't be saved.", "Discard and continue", true))) return;
+  // Remember where this was opened from, so "← Back" can return there instead of just closing
+  // the drawer outright. Phase 3: this is only ever reached from the Main-edit drawer now (the
+  // old subCsBanner path is gone), so origin is always that Main — not a single Sub's index.
+  addSubOrigin = state.mode === "mainEdit" ? { mainId: editingMainId } : null;
   openPanel(null, undefined, { addToMainId: mainId });
 }
 async function goBackFromAddSub() {
   if (state.dirty && !(await confirmBox("Discard unsaved changes?", "This new Sub Care Setting hasn't been saved yet.", "Discard and go back", true))) return;
-  if (addSubOrigin && CARE_SETTINGS[addSubOrigin.idx]) {
-    openPanel(CARE_SETTINGS[addSubOrigin.idx], addSubOrigin.idx);
+  if (addSubOrigin && addSubOrigin.mainId) {
+    openMainEditDrawer(addSubOrigin.mainId);
   } else {
     closePanel();
   }
 }
 function openPanel(cs, idx, opts) {
   opts = opts || {};
+  state.mode = "single";
+  editingMainId = null;
   editingIndex = (idx === undefined) ? null : idx;
   addToMainId = opts.addToMainId || null;
   carriedSubDefaults = null;
@@ -1744,47 +2241,36 @@ function openPanel(cs, idx, opts) {
 
   // Grouping is locked once a Care Setting is no longer a Draft — no retrofit past that point.
   // New record: show the toggle. Existing Draft, not yet grouped: same toggle, since a Draft
-  // can't have dependents yet. Existing record already in a group: the "belongs to a Main"
-  // story now lives entirely in the drawer's own subheader (subCsBanner), not buried in the
-  // form body — so the toggle block itself is simply hidden, same as any non-Draft standalone.
-  // Existing non-Draft standalone record: hide the whole block — it was never offered the
-  // choice and can't gain it now. Add-Sub-to-existing-Main mode (Phase 2): the grouping choice
-  // is already made and fixed, so the whole toggle block is replaced by a simple banner naming
-  // which Main this joins.
+  // can't have dependents yet. Existing non-Draft standalone record: hide the whole block — it
+  // was never offered the choice and can't gain it now. Add-Sub-to-existing-Main mode (Phase 2):
+  // the grouping choice is already made and fixed, so the whole toggle block is replaced by a
+  // simple banner naming which Main this joins. (A Sub Care Setting itself, cs.mainId truthy,
+  // never reaches this function at all as of Phase 3 — see the comment a few lines down.)
   const groupModeField = document.getElementById("groupModeField");
   const groupToggle = document.getElementById("groupModeToggle");
   groupToggle.checked = false;
   groupToggle.disabled = !!cs && (!!cs.mainId || cs.status !== "draft");
   document.getElementById("subSettingsContainer").innerHTML = "";
   document.getElementById("addSubSettingBtn").style.display = "none";
+  document.getElementById("mainEditAddSubRow").style.display = "none";
   document.getElementById("nameFieldLabel").textContent = "Name";
   document.getElementById("nameField").placeholder = "e.g. Infusion Suite";
   document.getElementById("sec-clinical").style.display = "";
   // Every section is collapsible; reset to the default collapse state on each open rather than
   // carrying over whatever a previous session left expanded/collapsed. Basic fields (Name/Short
   // Name) are always visible now — the whole standalone form is flat, no accordions.
+  // Phase 3: a Sub Care Setting (cs.mainId truthy) is no longer opened through this function at
+  // all — editCareSetting() routes it to openMainEditDrawer() instead — so the branch that used
+  // to live here (the subCsBanner subheader) no longer has any caller and has been removed
+  // rather than left in as dead code.
   const addToMainBanner = document.getElementById("addToMainBanner");
-  const subCsBanner = document.getElementById("subCsBanner");
-  const subCsAddBtn = document.getElementById("subCsAddBtn");
-  subCsBanner.style.display = "none";
   addToMainBanner.style.display = "none";
-  pendingAddToMainId = null;
   if (addToMainId) {
     groupModeField.style.display = "none";
     addToMainBanner.style.display = "flex";
     document.getElementById("addToMainBannerName").textContent = mainLabel(addToMainId);
   } else if (!cs) {
     groupModeField.style.display = "";
-  } else if (cs.mainId) {
-    // Sub Care Setting: the subheader — and its Edit / Add Sub Care Setting actions — shows
-    // regardless of this Sub's own status, including Retired's read-only Preview. Neither
-    // action touches this Sub's own record: Edit renames the Main, Add Sub Care Setting
-    // creates an entirely new, independent record elsewhere. Main has no status of its own to
-    // gate on, so there's no status-based reason to hide either one here.
-    groupModeField.style.display = "none";
-    pendingAddToMainId = cs.mainId;
-    subCsBanner.style.display = "flex";
-    document.getElementById("subCsBannerMainName").textContent = mainLabel(cs.mainId);
   } else if (cs.status === "draft") {
     // Existing standalone Draft: still eligible to become a group, since it can't have any
     // dependents yet. Same toggle as at creation, just reached by reopening the Draft.
