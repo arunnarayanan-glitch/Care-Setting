@@ -238,7 +238,7 @@ strong{font-weight:600}
     </section>
 
     <section class="content">
-      <div class="table-shell">
+      <div class="table-shell" id="dashboardTableShell" style="max-height:560px;overflow-y:auto;">
         <table class="table" aria-label="Care Settings">
           <colgroup>
             <col style="width: 18%">
@@ -266,17 +266,7 @@ strong{font-weight:600}
           </thead>
           <tbody id="tableBody"></tbody>
         </table>
-        <div class="table-footer dataTables_wrapper">
-          <div class="dataTables_info" id="pageSummary"></div>
-          <div class="pager dataTables_paginate">
-            <button class="paginate_button" id="firstPage" type="button" aria-label="First page">First</button>
-            <button class="paginate_button previous" id="prevPage" type="button" aria-label="Previous page"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/></svg></button>
-            <span class="paginate_button current" id="pageNumber"></span>
-            <button class="paginate_button next" id="nextPage" type="button" aria-label="Next page"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/></svg></button>
-            <button class="paginate_button" id="lastPage" type="button" aria-label="Last page">Last</button>
-            <span class="page-size-inline"><label for="pageSize" class="visually-hidden">Rows per page</label>Show <select class="control compact" id="pageSize"><option>5</option><option selected>10</option><option>25</option></select> entries</span>
-          </div>
-        </div>
+        <div class="table-scroll-sentinel" id="dashboardScrollSentinel" aria-hidden="true"></div>
       </div>
     </section>
   </main>
@@ -591,6 +581,9 @@ function lifecycleWarning(cs, action) {
 // state.mode: "single" (normal create/edit drawer — the default) or "mainEdit" (Phase 3 — the
 // unified drawer for a Main and all its Sub Care Settings; see openMainEditDrawer).
 const state = { mode: "single", status: "draft", dirty: false, readonly: false, suppressTrack: false, touched: new Set(), blocking: 0, sort: "updated", dir: "desc", page: 1, pageSize: 10 };
+const DASHBOARD_PAGE_SIZE = 20;
+let dashboardVisibleCount = DASHBOARD_PAGE_SIZE;
+let dashboardLastSignature = "";
 let editingIndex = null;
 // Phase 3: which Main is open in the unified Main-edit drawer. Mirrors editingIndex's role for
 // the single-record drawer, just keyed by Main id instead of a CARE_SETTINGS array index.
@@ -839,10 +832,8 @@ function toggleGroupRow(mainId) {
   else expandedGroups.add(mainId);
   renderTable();
 }
-function renderTable() {
+function getFilteredGroupedEntries() {
   const query = (dashboardFilters.search || "").trim().toLowerCase();
-  const tbody = document.getElementById("tableBody");
-
   let rows = CARE_SETTINGS.map((cs, idx) => ({ cs, idx })).filter(({ cs }) => {
     if (dashboardFilters.status.length && !dashboardFilters.status.includes(cs.status)) return false;
     if (dashboardFilters.visitCategory.length && !dashboardFilters.visitCategory.includes(cs.visitCategory)) return false;
@@ -871,6 +862,12 @@ function renderTable() {
       entries.push({ type: "single", item });
     }
   });
+  return entries;
+}
+
+function renderTable() {
+  const tbody = document.getElementById("tableBody");
+  const entries = getFilteredGroupedEntries();
 
   // A group's position in the sort follows its most recently touched child (matching whichever
   // column is currently sorted) — it behaves like one dashboard entry that tracks its liveliest
@@ -893,12 +890,18 @@ function renderTable() {
     th.setAttribute("aria-sort", th.dataset.keyTh === state.sort ? (state.dir === "asc" ? "ascending" : "descending") : "none");
   });
 
-  // Pagination counts a group as ONE entry regardless of how many children it has, and a group's
-  // children always render together — a group is never split across a page boundary.
-  const pages = Math.max(1, Math.ceil(entries.length / state.pageSize));
-  state.page = Math.min(state.page, pages);
-  const start = (state.page - 1) * state.pageSize;
-  const pageEntries = entries.slice(start, start + state.pageSize);
+  // Infinite scroll: a "page" of pageSize is replaced by a running visible-count that grows as
+  // the user scrolls, reset to the first batch whenever the search/filter/sort signature changes.
+  // Pagination still counts a group as ONE entry regardless of how many children it has, and a
+  // group's children always render together — a group is never split across the visible-count cut.
+  const signature = JSON.stringify(dashboardFilters) + "|" + state.sort + state.dir;
+  if (signature !== dashboardLastSignature) {
+    dashboardVisibleCount = DASHBOARD_PAGE_SIZE;
+    dashboardLastSignature = signature;
+    const shellEl = document.getElementById("dashboardTableShell");
+    if (shellEl) shellEl.scrollTop = 0;
+  }
+  const pageEntries = entries.slice(0, dashboardVisibleCount);
 
   if (!pageEntries.length) {
     tbody.innerHTML = '<tr><td colspan="9"><div class="empty"><strong>No Care Settings match the current filters.</strong><span class="muted">Clear a filter or create a new Care Setting.</span></div></td></tr>';
@@ -946,14 +949,19 @@ function renderTable() {
       }
     });
   }
-
-  document.getElementById("pageSummary").textContent = `Showing ${entries.length ? start + 1 : 0} to ${Math.min(start + state.pageSize, entries.length)} of ${entries.length} entries`;
-  document.getElementById("pageNumber").textContent = `${state.page} / ${pages}`;
-  document.getElementById("firstPage").disabled = state.page <= 1;
-  document.getElementById("prevPage").disabled = state.page <= 1;
-  document.getElementById("nextPage").disabled = state.page >= pages;
-  document.getElementById("lastPage").disabled = state.page >= pages;
-  state.lastPages = pages;
+}
+function initDashboardInfiniteScroll() {
+  const shell = document.getElementById("dashboardTableShell");
+  if (!shell) return;
+  shell.addEventListener("scroll", () => {
+    const nearBottom = shell.scrollTop + shell.clientHeight >= shell.scrollHeight - 80;
+    if (!nearBottom) return;
+    const total = getFilteredGroupedEntries().length;
+    if (dashboardVisibleCount < total) {
+      dashboardVisibleCount = Math.min(total, dashboardVisibleCount + DASHBOARD_PAGE_SIZE);
+      renderTable();
+    }
+  });
 }
 // Phase 3 (revised): every quick action below can be triggered from the dashboard row menu OR
 // from a Sub's own menu inside the Main-edit accordion (rowActionsHtml is shared by both). The
@@ -2251,11 +2259,7 @@ function openPanel(cs, idx, opts) {
   state.suppressTrack = false;
 }
 
-document.getElementById("pageSize").addEventListener("change", e => { state.pageSize = Number(e.target.value); state.page = 1; renderTable(); });
-document.getElementById("firstPage").addEventListener("click", () => { state.page = 1; renderTable(); });
-document.getElementById("prevPage").addEventListener("click", () => { state.page = Math.max(1, state.page - 1); renderTable(); });
-document.getElementById("nextPage").addEventListener("click", () => { state.page++; renderTable(); });
-document.getElementById("lastPage").addEventListener("click", () => { state.page = state.lastPages || state.page; renderTable(); });
+
 
 document.getElementById("closeModal").addEventListener("click", closeModal);
 document.getElementById("modalBackdrop").addEventListener("click", e => { if (e.target === document.getElementById("modalBackdrop")) closeModal(); });
@@ -2263,6 +2267,7 @@ document.getElementById("auditModalBackdrop").addEventListener("click", e => { i
 
 initDashboardFilters();
 renderTable();
+initDashboardInfiniteScroll();
 
 </script>
 </body>
