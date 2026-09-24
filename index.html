@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Care Settings — Wireframe</title>
+  <title>Care settings — Wireframe</title>
   <style>
 :root{
   /* blueEHR design-system palette (see common_v3_1.css / uikit-custom.css) */
@@ -13,7 +13,7 @@
   --bad:#b3261e;--bad-bg:#fdecea;--neutral:#eceff2;
   --font:"roboto","Segoe UI","Helvetica Neue",Arial,sans-serif;
   --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:24px;
-  --field-gap:16px 14px;--chip-radius:10px;
+  --field-gap:8px 7px;--chip-radius:10px;
   --text-xs:11px;--text-sm:12px;--text-base:14px;--text-lg:16px;--text-xl:17px;
 }
 @font-face {
@@ -99,9 +99,10 @@ button,input,select,textarea{font:inherit;color:inherit}button{border:0}button:f
 .visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;white-space:nowrap!important;border:0!important}
 .app{display:grid;grid-template-rows:42px minmax(0,1fr);width:100vw;height:100vh;min-width:760px}.main{display:grid;grid-template-rows:auto auto minmax(0,1fr);min-height:0}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:0 10px;background:var(--navy);color:#fff}.topgroup,.toolbar-left,.toolbar-right,.filters{display:flex;align-items:center;gap:9px;min-width:0}.brand{font-weight:600}.sq{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;background:#2671a6;color:#fff;border:1px solid #ffffff2b;border-radius:0;cursor:pointer}.search{position:relative;width:clamp(280px,34vw,540px)}.search input{width:100%;height:28px;padding:0 34px 0 10px;border:0;border-radius:0}.search button{position:absolute;right:0;top:0;width:30px;height:28px;background:transparent;color:var(--navy);cursor:pointer}.avatar{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:50%;background:#dceaf4;color:var(--navy);font-size:var(--text-xs);font-weight:600}
-.toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:52px;padding:8px 18px;background:#fff;border-bottom:1px solid var(--line)}.toolbar-left{flex:1;flex-wrap:wrap}.toolbar h1{margin:0 8px 0 0;font-size:var(--text-xl)}.filter-bar{padding:8px 18px;background:#fff;border-bottom:1px solid var(--line)}.summary,.muted,.help{color:var(--muted);font-size:var(--text-sm)}.filters{flex-wrap:wrap}.control{height:30px;padding:5px 10px;background:#fff;color:#000;border:1px solid #d7dde1;border-radius:0;font-size:13px;box-shadow:none}.control.compact{width:auto;min-width:125px;height:29px;font-size:var(--text-sm)}.filter-select-btn{width:220px;height:32px;padding:0 26px 0 10px;background:#fff;border:1px solid #d7dde1;border-radius:0;font-size:var(--text-sm);text-align:left;position:relative;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.filter-select-btn::after{content:'';position:absolute;right:10px;top:50%;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid #808080;transform:translateY(-50%);pointer-events:none}.filter-select-btn[aria-expanded="true"]::after{border-top-color:var(--navy)}.toggle{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-sm);color:#808080;white-space:nowrap}.toggle input{width:15px;height:15px;margin:0}
-.btn,.icon-btn,.link-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;border-radius:0}.btn{min-height:30px;padding:0 13px;background:#fff;color:#000;border:1px solid #e6e6e6}.btn:hover:not(:disabled),.icon-btn:hover:not(:disabled){background:#fff;color:#1a4f85;border-color:#e6e6e6}.btn.primary{background:#1a4f85;border-color:#1a4f85;color:#fff}.btn.primary:hover:not(:disabled){background:#003366;border-color:#003366;color:#fff}.btn.small{min-height:26px;padding:0 9px;font-size:var(--text-sm)}.btn.danger{color:var(--bad);border-color:#e6bbb5}.btn.tertiary{background:transparent;border-color:transparent;color:#808080}.btn.tertiary:hover:not(:disabled){background:#f4f8fb;color:#1a4f85;border-color:#d7dde1}.btn:disabled,.icon-btn:disabled{opacity:.45;cursor:not-allowed}.icon-btn{width:34px;height:34px;padding:0;background:#fff;border:1px solid #d7dde1}.link-btn{padding:0;background:transparent;color:#1a4f85;font-weight:600}.link-btn:hover{text-decoration:underline}
-.content{min-height:0;overflow:auto;padding:14px 18px 20px}.table-shell{min-width:1180px;background:#fff;border:1px solid var(--line)}.table{width:100%;border-collapse:collapse;table-layout:fixed}.table th,.table td{padding:9px 10px;text-align:left;vertical-align:middle}.table td{border-bottom:1px solid #edf0f2}.table tbody tr{height:52px}.table th{background:#f4f8fb;color:#8b959e;font-size:var(--text-xs);font-weight:600;border-bottom:1px solid #d7dee5}.table tbody tr:hover{background:#f7fbfe}.table tbody tr:last-child td{border-bottom:0}.sort{padding:0;background:transparent;color:inherit;font:inherit;font-weight:600;text-transform:inherit;letter-spacing:inherit;cursor:pointer}.cell-title{font-weight:600}.cell-meta{margin-top:2px;color:var(--muted);font-size:var(--text-xs)}.tags{display:flex;flex-wrap:wrap;gap:5px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:52px;padding:8px 18px;background:#EDF2F9;border-bottom:1px solid var(--line)}.toolbar-left{flex:1;flex-wrap:wrap}.toolbar h1{margin:0 8px 0 0;font-size:var(--text-xl);color:#003466}.filter-bar{padding:8px 18px;background:#fff;border-bottom:1px solid var(--line)}.summary,.muted,.help{color:var(--muted);font-size:var(--text-sm)}.filters{flex-wrap:wrap}.control{height:30px;padding:5px 10px;background:#fff;color:#000;border:1px solid #d7dde1;border-radius:0;font-size:13px;box-shadow:none}.control.compact{width:auto;min-width:125px;height:29px;font-size:var(--text-sm)}.filter-select-btn{width:220px;height:32px;padding:0 26px 0 10px;background:#fff;border:1px solid #d7dde1;border-radius:0;font-size:var(--text-sm);text-align:left;position:relative;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.filter-select-btn .dropdown-caret{position:absolute;right:9px;top:50%;transform:translateY(-50%);color:#66748A;pointer-events:none;transition:transform .12s;font-size:10px}.filter-select-btn[aria-expanded="true"] .dropdown-caret{color:var(--navy);transform:translateY(-50%) rotate(180deg)}.toggle{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-sm);color:#808080;white-space:nowrap}.toggle input{width:15px;height:15px;margin:0}
+.search-input-wrap{position:relative;display:flex}.search-input-wrap input{padding-right:32px}.search-input-icon{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#66748A;pointer-events:none;display:inline-flex}
+.btn,.icon-btn,.link-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;border-radius:0}.btn{min-height:30px;padding:0 13px;background:#fff;color:#000;border:1px solid #e6e6e6}.btn:hover:not(:disabled),.icon-btn:hover:not(:disabled){background:#fff;color:#1a4f85;border-color:#e6e6e6}.btn.primary{background:#003466;border-color:#003466;color:#fff}.btn.primary:hover:not(:disabled){background:#00203d;border-color:#00203d;color:#fff}.btn.secondary{background:#EDF2F9;border-color:#1a4f85;color:#1a4f85;font-weight:600}.btn.secondary:hover:not(:disabled){background:#dfe8f4;border-color:#1a4f85;color:#1a4f85}.btn.small{min-height:26px;padding:0 9px;font-size:var(--text-sm)}.btn.danger{color:var(--bad);border-color:#e6bbb5}.btn.tertiary{background:#fff;border-color:#d7dde1;color:#000}.btn.tertiary:hover:not(:disabled){background:#f4f8fb;color:#000;border-color:#d7dde1}.btn:disabled,.icon-btn:disabled{opacity:.45;cursor:not-allowed}.icon-btn{width:34px;height:34px;padding:0;background:#fff;border:1px solid #d7dde1}.link-btn{padding:0;background:transparent;color:#1a4f85;font-weight:600}.link-btn:hover{text-decoration:underline}
+.content{min-height:0;overflow:hidden;padding:14px 18px 20px;display:flex;flex-direction:column}.table-shell{min-width:1180px;flex:1 1 auto;min-height:0;background:#fff;border:1px solid var(--line);display:flex;flex-direction:column}.table-scroll{flex:1 1 auto;min-height:0;overflow-y:auto}.table{width:100%;border-collapse:collapse;table-layout:fixed}.table thead th{position:sticky;top:0;z-index:2}.table th{padding:9px 10px;text-align:left;vertical-align:middle}.table td{padding:6px 10px;text-align:left;vertical-align:middle;border-bottom:1px solid #edf0f2}.table tbody tr{height:36px}.table th{background:#F7FBFC;color:#66748A;font-size:var(--text-xs);font-weight:600;border-bottom:1px solid #d7dee5}.table tbody tr:hover{background:#f7fbfe}.sort{padding:0;background:transparent;color:inherit;font:inherit;font-weight:600;text-transform:inherit;letter-spacing:inherit;cursor:pointer}.cell-title{font-weight:600}.cell-meta{margin-top:2px;color:var(--muted);font-size:var(--text-xs)}.tags{display:flex;flex-wrap:wrap;gap:5px}
 /* Badge atom — one shared box model for every status/label chip in the tool (Care Setting
    lifecycle pill, Facility count tag, card completion state, readiness indicator). Previously
    four components each defined their own padding/radius/size and, in two cases, a slightly
@@ -112,11 +113,11 @@ button,input,select,textarea{font:inherit;color:inherit}button{border:0}button:f
 .pill.active,.section-state.ok{background:var(--ok-bg);color:var(--ok)}
 .pill.draft,.section-state.progress{background:var(--blue-soft);color:var(--navy2)}
 .pill.inactive{background:var(--warn-bg);color:var(--warn)}
-.section-state.bad{background:var(--bad-bg);color:var(--bad)}.versions{display:flex;flex-direction:column;align-items:flex-start;gap:4px}.version-link{display:inline-flex;align-items:center;gap:5px;padding:0;background:transparent;color:#1a4f85;font-size:var(--text-sm);font-weight:600;cursor:pointer}.version-link:hover{text-decoration:underline}.ready{display:inline-flex;align-items:center;gap:5px;font-size:var(--text-sm);font-weight:600}.ready.ok{color:var(--ok)}.ready.warn{color:var(--warn)}.ready.bad{color:var(--bad)}.actions{text-align:right!important}.menu-wrap{position:relative;display:inline-flex}.menu-wrap>.icon-btn{background:transparent;border-color:transparent}.menu-wrap>.icon-btn:hover:not(:disabled){background:var(--blue-soft);border-color:transparent}.menu{position:absolute;z-index:40;top:calc(100% + 4px);right:0;display:none;min-width:180px;padding:4px 0;background:#fff;border:1px solid #d7dde1;box-shadow:0 8px 22px #001f3d29}.menu.open{display:block}.menu-divider{margin:4px 0;border-top:1px solid #ebebeb}.menu button{display:block;width:100%;padding:8px 11px;text-align:left;background:transparent;cursor:pointer}.menu button:hover{background:var(--blue-soft)}.empty{padding:38px 15px;text-align:center}.empty strong{display:block;margin-bottom:4px}.table-footer{display:flex;align-items:center;justify-content:space-between;min-height:42px;padding:7px 10px;background:#f7fbfc;border-top:1px solid var(--line);color:var(--muted);font-size:var(--text-sm)}.pager{display:flex;align-items:center;gap:6px}
-.backdrop{position:fixed;z-index:90;inset:0;display:none;background:#00224438}.backdrop.open{display:block}.drawer{position:fixed;z-index:100;top:0;right:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;width:min(1120px,78vw);height:100vh;background:#fff;box-shadow:-8px 0 24px #00264d2e;transform:translateX(105%);transition:.18s}.drawer.open{transform:translateX(0)}.drawer-head{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:55px;padding:10px 17px;border-bottom:1px solid var(--line)}.drawer-title{margin:0;font-size:var(--text-xl)}.drawer-sub{margin-top:3px;color:var(--muted);font-size:var(--text-sm)}.drawer-actions{display:flex;gap:6px}.validation-strip{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:34px;padding:5px 17px;background:#fff;border-bottom:1px solid var(--line);color:#808080;font-size:var(--text-sm)}.validation-summary{display:inline-flex;align-items:center;gap:7px}.validation-dot{width:8px;height:8px;border-radius:50%;background:#9aa7b2;flex:0 0 auto}.validation-strip.error{background:#fff;color:var(--bad)}.validation-strip.error .validation-dot{background:var(--bad)}.validation-strip.warning{background:#fff;color:var(--warn)}.validation-strip.warning .validation-dot{background:#d09a21}.validation-strip.success{background:#fff;color:var(--ok)}.validation-strip.success .validation-dot{background:var(--ok)}.validation-strip.neutral{color:var(--muted)}.recovery{display:none;align-items:center;justify-content:space-between;gap:12px;padding:8px 17px;background:var(--blue-soft);border-bottom:1px solid #edf2f9;font-size:var(--text-sm)}.recovery.open{display:flex}.drawer-body{min-height:0;overflow-y:auto;padding:18px;background:#fff}.drawer-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:54px;padding:9px 17px;border-top:1px solid var(--line)}.autosave{margin-right:auto;color:var(--muted);font-size:var(--text-sm)}.sub-cs-banner{align-items:center;justify-content:space-between;gap:12px;padding:8px 17px;background:var(--blue-soft);border-bottom:1px solid #edf2f9;font-size:var(--text-sm);color:var(--ink)}
-.card{margin-bottom:14px;background:#fff;border:1px solid var(--line)}.card:last-child{margin-bottom:0}.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:13px 15px 11px;border-bottom:1px solid #ebebeb}.card-title{margin:0;font-size:var(--text-lg)}.card-desc{max-width:760px;margin:4px 0 0;color:var(--muted);font-size:var(--text-sm)}.section-state{flex:0 0 auto}.card-body{padding:15px}.flat-section{margin:10px 0 22px;padding-bottom:18px;border-bottom:1px solid #edf0f2}.flat-section:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}.flat-section-title{margin:0 0 12px;font-size:var(--text-lg);font-weight:600;color:var(--ink)}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--field-gap)}.field.full{grid-column:1/-1}.field label,.field-label{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;color:#808080;font-size:var(--text-sm);font-weight:600}.text,.textarea{width:100%;background:#fff;color:#000;border:1px solid #d7dde1;border-radius:0;font-size:13px;box-shadow:none}.text{height:30px;padding:5px 10px}.textarea{min-height:78px;padding:8px 10px;resize:vertical}.field-error{display:none;margin-top:5px;color:var(--bad);font-size:var(--text-sm)}.field.error .text,.field.error .textarea{border-color:#d9988f;background:#fffafa}.field.error .field-error{display:block}.field-hint-warn{margin-top:5px;color:var(--warn);font-size:var(--text-sm)}.short-meta{display:flex;align-items:center;justify-content:space-between;min-height:23px;margin-top:4px;color:var(--muted);font-size:var(--text-xs)}
-.section-toolbar,.table-toolbar,.flow-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.derived-scope{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-top:14px;padding:10px 11px;background:#f5f8fb;border:1px solid #dce5ed}.derived-scope .tags{justify-content:flex-end}.derived-scope-copy{min-width:220px}.derived-scope-copy strong{display:block;margin-bottom:2px}.picker{position:relative;max-width:500px;margin-top:0}.picker-input{display:grid;grid-template-columns:minmax(0,1fr) auto}.picker-input .text{border-radius:0 0 0 2px}.picker-input .btn{border-left:0;border-radius:0 2px 2px 0}.picker-menu{position:absolute;z-index:30;top:calc(100% + 3px);left:0;right:0;display:none;max-height:240px;overflow:auto;background:#fff;border:1px solid #d7dde1;border-radius:0;box-shadow:0 8px 20px #001f3d24;padding:4px}.picker-menu.open{display:block}.picker-option{display:flex;align-items:center;justify-content:flex-start;gap:9px;width:100%;padding:8px 10px;border-radius:0;text-align:left;background:transparent;cursor:pointer;font-size:var(--text-sm)}.picker-option input[type="checkbox"]{flex:0 0 auto;width:15px;height:15px;margin:0}.picker-option:hover{background:var(--blue-soft)}.selected-shell{margin-top:15px;border:1px solid var(--line)}.selected-shell .table-toolbar{min-height:39px;margin:0;padding:6px 9px;background:#f4f8fb;border-bottom:1px solid var(--line)}.selected-shell .table{table-layout:auto}.coverage{display:flex;flex-direction:column;gap:3px;font-size:var(--text-xs)}.coverage .ok{color:var(--ok)}.coverage .bad{color:var(--bad)}.manage{display:inline-flex;margin-top:10px;color:#1a4f85;font-weight:600;text-decoration:none}.manage:hover{text-decoration:underline}
-.flow-shell{margin-bottom:14px;padding:11px;background:#fbfcfd;border:1px solid var(--line)}.flow-map{display:flex;align-items:stretch;gap:7px;overflow-x:auto;padding:2px 1px 6px}.flow-node{flex:0 0 148px;min-height:70px;padding:8px 9px;text-align:left;background:#fff;border:1px solid #dde3e8;color:var(--muted);cursor:pointer}.flow-node.selected{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue);color:var(--ink)}.flow-node.bad{border-color:#d9988f;background:#fffafa;color:var(--ink)}.flow-node strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.flow-node small{display:block;margin-top:5px;color:var(--muted)}.flow-arrow{align-self:center;color:#7f8b95;font-size:18px}.workflow{display:grid;grid-template-columns:minmax(260px,32%) minmax(0,1fr);gap:13px;min-height:430px}.status-list,.status-editor{min-width:0;border:1px solid var(--line)}.panel-head{display:flex;align-items:center;justify-content:space-between;min-height:39px;padding:7px 10px;background:#f4f8fb;border-bottom:1px solid var(--line)}.status-list-body{padding:6px}.insert{display:flex;justify-content:center;height:20px}.insert button{width:22px;height:18px;background:transparent;color:#1a4f85;cursor:pointer;opacity:.45}.insert button:hover{opacity:1}.status-list-body{padding:6px}.insert{display:flex;justify-content:center;height:20px}.insert button{width:22px;height:18px;background:transparent;color:#1a4f85;cursor:pointer;opacity:.45}.insert button:hover{opacity:1}.status-actions{display:flex;gap:3px}.status-actions .icon-btn{width:24px;height:24px;font-size:var(--text-xs)}.status-editor-body{padding:13px}.flags{display:flex;flex-wrap:wrap;gap:16px;margin:12px 0;padding:10px;background:#f4f8fb;border:1px solid #e1e6ea}.flags label,.check-option{display:inline-flex;align-items:center;gap:6px}.subsection{margin-top:15px;padding-top:13px;border-top:1px solid #e4e9ed}.subsection h4{margin:0 0 4px;font-size:var(--text-sm)}.subsection p{margin:0 0 9px;color:var(--muted);font-size:var(--text-xs)}.check-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--field-gap)}.check-option{min-height:30px;padding:5px 7px;background:#f7fbfc;border:1px solid #d7dee5;font-size:var(--text-sm)}.timer-grid{display:grid;grid-template-columns:85px 110px minmax(0,1fr);gap:8px}.inline-issues{margin-top:11px;padding:8px 9px;background:var(--bad-bg);border-left:3px solid var(--bad);color:var(--bad);font-size:var(--text-sm)}.inline-issues ul{margin:4px 0 0;padding-left:17px}.scope-note{display:flex;gap:8px;margin-top:14px;padding:10px 11px;background:#f4f8fb;border-left:3px solid #aeb8c1;color:#808080;font-size:var(--text-sm)}
+.section-state.bad{background:var(--bad-bg);color:var(--bad)}.versions{display:flex;flex-direction:column;align-items:flex-start;gap:4px}.version-link{display:inline-flex;align-items:center;gap:5px;padding:0;background:transparent;color:#1a4f85;font-size:var(--text-sm);font-weight:600;cursor:pointer}.version-link:hover{text-decoration:underline}.ready{display:inline-flex;align-items:center;gap:5px;font-size:var(--text-sm);font-weight:600}.ready.ok{color:var(--ok)}.ready.warn{color:var(--warn)}.ready.bad{color:var(--bad)}.actions{text-align:right!important}.menu-wrap{position:relative;display:inline-flex}.menu-wrap>.icon-btn{background:transparent;border-color:transparent}.menu-wrap>.icon-btn:hover:not(:disabled){background:var(--blue-soft);border-color:transparent}.menu{position:absolute;z-index:40;top:calc(100% + 4px);right:0;display:none;min-width:180px;padding:4px 0;background:#fff;border:1px solid #d7dde1;box-shadow:0 8px 22px #001f3d29}.menu.open{display:block}.menu-divider{margin:4px 0;border-top:1px solid #ebebeb}.menu button{display:block;width:100%;padding:8px 11px;text-align:left;background:transparent;cursor:pointer}.menu button:hover{background:var(--blue-soft)}.empty{padding:38px 15px;text-align:center}.empty strong{display:block;margin-bottom:4px}.table-footer{position:sticky;bottom:0;z-index:5;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;min-height:42px;padding:7px 10px;background:#fff;border-top:1px solid var(--line);color:var(--muted);font-size:var(--text-sm)}.pager{display:flex;align-items:center;gap:6px}
+.backdrop{position:fixed;z-index:90;inset:0;display:none;background:#00224438}.backdrop.open{display:block}.drawer{position:fixed;z-index:100;top:0;right:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;width:min(1120px,78vw);height:100vh;background:#fff;box-shadow:-8px 0 24px #00264d2e;transform:translateX(105%);transition:.18s}.drawer.open{transform:translateX(0)}.drawer-head{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:55px;padding:10px 17px;border-bottom:1px solid var(--line)}.drawer-title{margin:0;font-size:var(--text-xl)}.drawer-sub{margin-top:3px;color:var(--muted);font-size:var(--text-sm)}.drawer-actions{display:flex;gap:6px}.drawer-actions.right{padding-left:16px;border-left:1px solid var(--line)}.icon-btn.close{width:auto;height:auto;padding:0;background:transparent;border:0;color:#000;font-size:20px}.icon-btn.close:hover{background:transparent;color:#000;border:0}.validation-strip{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:34px;padding:5px 17px;background:#fff;border-bottom:1px solid var(--line);color:#808080;font-size:var(--text-sm)}.validation-summary{display:inline-flex;align-items:center;gap:7px}.validation-dot{width:8px;height:8px;border-radius:50%;background:#9aa7b2;flex:0 0 auto}.validation-strip.error{background:#fff;color:var(--bad)}.validation-strip.error .validation-dot{background:var(--bad)}.validation-strip.warning{background:#fff;color:var(--warn)}.validation-strip.warning .validation-dot{background:#d09a21}.validation-strip.success{background:#fff;color:var(--ok)}.validation-strip.success .validation-dot{background:var(--ok)}.validation-strip.neutral{color:var(--muted)}.recovery{display:none;align-items:center;justify-content:space-between;gap:12px;padding:8px 17px;background:var(--blue-soft);border-bottom:1px solid #edf2f9;font-size:var(--text-sm)}.recovery.open{display:flex}.drawer-body{min-height:0;overflow-y:auto;padding:10px}.drawer-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:54px;padding:9px 17px;background:#F4F8FB;border-top:1px solid var(--line)}.autosave{margin-right:auto;color:var(--muted);font-size:var(--text-sm)}.sub-cs-banner{align-items:center;justify-content:space-between;gap:12px;padding:8px 17px;background:var(--blue-soft);border-bottom:1px solid #edf2f9;font-size:var(--text-sm);color:var(--ink)}
+.card{margin-bottom:7px;background:#fff;border:1px solid var(--line)}.card:last-child{margin-bottom:0}.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:6px 12px 6px;border-bottom:1px solid #ebebeb}.card-title{margin:0;font-size:var(--text-lg)}.sub-card-title{font-size:13px}#subSettingsContainer .card{margin-bottom:0}#subSettingsContainer .card+.card{margin-top:-1px}#subSettingsContainer .card-head{align-items:center}#subSettingsContainer .card-title{display:flex;align-items:center;gap:6px}#subSettingsContainer .card-title .card-chevron{display:inline-flex;align-items:center}#subSettingsContainer .card-head .icon-btn{align-self:center}.card-desc{max-width:760px;margin:3px 0 0;color:var(--muted);font-size:var(--text-sm)}.section-state{flex:0 0 auto}.card-body{padding:8px}.flat-section{margin:5px 0 10px;padding-bottom:9px;border-bottom:1px solid #edf0f2}.flat-section:last-child{border-bottom:0;margin-bottom:0;padding-bottom:0}.flat-section-title{margin:0 0 6px;font-size:var(--text-lg);font-weight:600;color:var(--ink)}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--field-gap)}.field.full{grid-column:1/-1}.field>label,.field-label{display:flex;align-items:center;justify-content:flex-start;gap:4px;margin-bottom:5px;color:#808080;font-size:var(--text-sm);font-weight:600}.toggle-row{display:flex;align-items:center;gap:8px;min-height:28px}.toggle-row-label{font-weight:600;color:#000;font-size:var(--text-sm);display:inline-flex;align-items:center;line-height:1}.toggle-row .info{margin:0;display:inline-flex;align-items:center}.toggle-row .btn{margin-left:auto;align-self:center}.req{color:#c0392b;font-weight:700}.text,.textarea{width:100%;background:#fff;color:#000;border:1px solid #d7dde1;border-radius:0;font-size:13px;box-shadow:none}.text{height:30px;padding:5px 10px}select.text,select{appearance:none;-webkit-appearance:none;-moz-appearance:none;padding-right:28px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2366748A' viewBox='0 0 16 16'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>");background-repeat:no-repeat;background-position:right 9px center;background-size:11px 11px}.textarea{min-height:78px;padding:8px 10px;resize:vertical}.field-error{display:none;margin-top:5px;color:var(--bad);font-size:var(--text-sm)}.field.error .text,.field.error .textarea{border-color:#d9988f;background:#fffafa}.field.error .field-error{display:block}.field-hint-warn{margin-top:5px;color:var(--warn);font-size:var(--text-sm)}.short-meta{display:flex;align-items:center;justify-content:space-between;min-height:23px;margin-top:4px;color:var(--muted);font-size:var(--text-xs)}
+.section-toolbar,.table-toolbar,.flow-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}.derived-scope{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-top:14px;padding:10px 11px;background:#f5f8fb;border:1px solid #dce5ed}.derived-scope .tags{justify-content:flex-end}.derived-scope-copy{min-width:220px}.derived-scope-copy strong{display:block;margin-bottom:2px}.picker{position:relative;max-width:500px;margin-top:0}.picker-input{display:grid;grid-template-columns:minmax(0,1fr) auto}.picker-input .text{border-radius:0 0 0 2px}.picker-input .btn{border-left:0;border-radius:0 2px 2px 0}.picker-menu{position:absolute;z-index:60;top:calc(100% + 3px);left:0;right:0;display:none;max-height:240px;overflow:auto;background:#fff;border:1px solid #d7dde1;border-radius:0;box-shadow:0 8px 20px #001f3d24;padding:4px}.picker-menu.open{display:block}.picker-option{display:flex;align-items:center;justify-content:flex-start;gap:9px;width:100%;padding:8px 10px;border-radius:0;text-align:left;background:transparent;cursor:pointer;font-size:var(--text-sm)}.picker-option input[type="checkbox"]{flex:0 0 auto;width:15px;height:15px;margin:0}.picker-option:hover{background:var(--blue-soft)}.selected-shell{margin-top:15px;border:1px solid var(--line)}.selected-shell .table-toolbar{min-height:39px;margin:0;padding:6px 9px;background:#f4f8fb;border-bottom:1px solid var(--line)}.selected-shell .table{table-layout:auto}.coverage{display:flex;flex-direction:column;gap:3px;font-size:var(--text-xs)}.coverage .ok{color:var(--ok)}.coverage .bad{color:var(--bad)}.manage{display:inline-flex;margin-top:10px;color:#1a4f85;font-weight:600;text-decoration:none}.manage:hover{text-decoration:underline}
+.flow-shell{margin-bottom:7px;padding:6px;background:#fbfcfd;border:1px solid var(--line)}.flow-map{display:flex;align-items:stretch;gap:7px;overflow-x:auto;padding:2px 1px 6px}.flow-node{flex:0 0 148px;min-height:70px;padding:8px 9px;text-align:left;background:#fff;border:1px solid #dde3e8;color:var(--muted);cursor:pointer}.flow-node.selected{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue);color:var(--ink)}.flow-node.bad{border-color:#d9988f;background:#fffafa;color:var(--ink)}.flow-node strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.flow-node small{display:block;margin-top:5px;color:var(--muted)}.flow-arrow{align-self:center;color:#7f8b95;font-size:18px}.workflow{display:grid;grid-template-columns:minmax(260px,32%) minmax(0,1fr);gap:13px;min-height:430px}.status-list,.status-editor{min-width:0;border:1px solid var(--line)}.panel-head{display:flex;align-items:center;justify-content:space-between;min-height:39px;padding:7px 10px;background:#f4f8fb;border-bottom:1px solid var(--line)}.status-list-body{padding:6px}.insert{display:flex;justify-content:center;height:20px}.insert button{width:22px;height:18px;background:transparent;color:#1a4f85;cursor:pointer;opacity:.45}.insert button:hover{opacity:1}.status-list-body{padding:6px}.insert{display:flex;justify-content:center;height:20px}.insert button{width:22px;height:18px;background:transparent;color:#1a4f85;cursor:pointer;opacity:.45}.insert button:hover{opacity:1}.status-actions{display:flex;gap:3px}.status-actions .icon-btn{width:24px;height:24px;font-size:var(--text-xs)}.status-editor-body{padding:13px}.flags{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0;padding:5px;background:#f4f8fb;border:1px solid #e1e6ea}.flags label,.check-option{display:inline-flex;align-items:center;gap:6px}.subsection{margin-top:7px;padding-top:6px;border-top:1px solid #e4e9ed}.subsection h4{margin:0 0 3px;font-size:var(--text-sm)}.subsection p{margin:0 0 6px;color:var(--muted);font-size:var(--text-xs)}.check-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--field-gap)}.check-option{min-height:30px;padding:5px 7px;background:#f7fbfc;border:1px solid #d7dee5;font-size:var(--text-sm)}.timer-grid{display:grid;grid-template-columns:85px 110px minmax(0,1fr);gap:8px}.inline-issues{margin-top:8px;padding:6px 9px;background:var(--bad-bg);border-left:3px solid var(--bad);color:var(--bad);font-size:var(--text-sm)}.inline-issues ul{margin:4px 0 0;padding-left:17px}.scope-note{display:flex;gap:8px;margin-top:10px;padding:7px 11px;background:#f4f8fb;border-left:3px solid #aeb8c1;color:#808080;font-size:var(--text-sm)}
 .modal-backdrop{position:fixed;z-index:300;inset:0;display:none;align-items:center;justify-content:center;padding:24px;background:#0021416b}.modal-backdrop.open{display:flex}.modal{display:grid;grid-template-rows:auto minmax(0,1fr) auto;width:min(720px,94vw);max-height:82vh;background:#fff;box-shadow:0 20px 60px #001f3d3d}.modal.large{width:min(1040px,94vw)}.modal-head,.modal-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 14px;border-bottom:1px solid var(--line)}.modal-head h2{margin:0;font-size:var(--text-lg)}.modal-body{min-height:0;overflow:auto;padding:14px}.modal-foot{justify-content:flex-end;border-top:1px solid var(--line);border-bottom:0}.issue-row,.check-row{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:8px;align-items:center;min-height:37px;padding:7px 8px;border-bottom:1px solid #ebebeb}.issue-row:last-child,.check-row:last-child{border-bottom:0}.issue-group{margin-bottom:14px}.issue-group h4{margin:0 0 7px}.history{width:100%;border-collapse:collapse}.history th,.history td{padding:8px 9px;text-align:left;border-bottom:1px solid #e6ebef}.history th{background:#f4f8fb;color:var(--muted);font-size:var(--text-xs);text-transform:uppercase}.compare{margin-top:15px;padding:12px;background:#f4f8fb;border:1px solid var(--line)}.compare-controls,.preview-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.toast-region{position:fixed;z-index:500;right:18px;bottom:38px;display:grid;gap:7px;width:min(340px,calc(100vw - 36px))}.toast{padding:10px 12px;background:#263746;color:#fff;box-shadow:0 8px 22px #001f3d33;font-size:var(--text-sm)}.proto{display:flex;align-items:center;gap:18px;padding:0 12px;background:var(--navy);color:#fff;font-size:var(--text-xs)}
 @media(max-width:1280px){.drawer{width:88vw}}@media(max-width:980px){.drawer{width:100vw}.workflow{grid-template-columns:1fr}.status-list{max-height:360px;overflow:auto}}@media(max-width:760px){.app{min-width:0}.toolbar{align-items:stretch;flex-direction:column}.filters{align-items:stretch}.form-grid,.check-grid,.timer-grid{grid-template-columns:1fr}.drawer-actions .btn span{display:none}.modal-backdrop{padding:0}.modal,.modal.large{width:100vw;max-height:100vh}}
   </style>
@@ -134,8 +135,8 @@ button,input,select,textarea{font:inherit;color:inherit}button{border:0}button:f
    classes; this page's fields don't carry them, so target by context instead) */
 .field input[type="text"],
 .field input[type="number"],
-.field input[type="search"],
-.field select{width:100%;height:30px;padding:0 9px;background:#fff;border:1px solid #d7dde1;border-radius:0}
+.field input[type="search"]{width:100%;height:30px;padding:0 9px;background:#fff;border:1px solid #d7dde1;border-radius:0}
+.field select{width:100%;height:30px;padding:0 28px 0 9px;background:#fff;border:1px solid #d7dde1;border-radius:0;appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2366748A' viewBox='0 0 16 16'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>");background-repeat:no-repeat;background-position:right 9px center;background-size:11px 11px}
 .field textarea{width:100%;height:auto;min-height:78px;padding:8px 9px;background:#fff;border:1px solid #d7dde1;border-radius:0;resize:vertical}
 .inline-pair{display:grid;grid-template-columns:1fr 100px;gap:6px}
 
@@ -164,7 +165,7 @@ button,input,select,textarea{font:inherit;color:inherit}button{border:0}button:f
 
 /* Info tooltip beside a field label */
 .info{position:relative;display:inline-flex;margin-left:3px;color:var(--muted);font-size:var(--text-xs);cursor:pointer}
-.info .tip{position:absolute;z-index:20;top:calc(100% + 5px);left:0;display:none;width:220px;padding:8px 9px;background:#263746;color:#fff;font-size:var(--text-xs);font-weight:400;line-height:1.5;box-shadow:0 8px 20px #001f3d33}
+.info .tip{position:absolute;z-index:60;top:calc(100% + 5px);left:0;display:none;width:220px;padding:8px 9px;background:#263746;color:#fff;font-size:var(--text-xs);font-weight:400;line-height:1.5;box-shadow:0 8px 20px #001f3d33}
 .info.show .tip{display:block}
 
 /* Collapse the validation strip cleanly when it has no message */
@@ -176,8 +177,10 @@ button,input,select,textarea{font:inherit;color:inherit}button{border:0}button:f
 
 /* Sortable dashboard column headers — ported from Trackerboard */
 .sort-th{display:inline-flex;align-items:center;gap:4px;background:transparent;border:0;padding:0;font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit;font-weight:600;cursor:pointer}
-.sort-th .sort-glyph{font-size:9px;opacity:.4}
-th[aria-sort="ascending"] .sort-glyph,th[aria-sort="descending"] .sort-glyph{opacity:1;color:var(--navy2)}
+.sort-th .sort-glyph{font-size:10px;opacity:.7;color:#66748A;display:inline-flex}
+.sort-th:hover .sort-glyph{opacity:1}
+th[aria-sort="ascending"] .sort-glyph{opacity:1;color:#003466;transform:rotate(0deg)}
+th[aria-sort="descending"] .sort-glyph{opacity:1;color:#003466;transform:rotate(180deg)}
 
 /* Info popover — name details, "+N more" group overflow — ported from Trackerboard */
 .info-popover-wrap{position:relative;display:inline-flex;vertical-align:middle;margin-left:4px}
@@ -192,8 +195,8 @@ th[aria-sort="ascending"] .sort-glyph,th[aria-sort="descending"] .sort-glyph{opa
 .list-trigger{padding:0;background:transparent;border:0;color:#1a4f85;font-weight:600;font-size:inherit;cursor:pointer}
 .list-trigger:hover{text-decoration:underline}
 strong{font-weight:600}
-.switch{position:relative;display:inline-block;width:35px;height:20px;margin-bottom:0;flex:0 0 auto}.switch input{display:none}.switch .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#cfcfcf;transition:all .4s}.switch .slider.round{border-radius:10px}.switch .slider:before{position:absolute;content:'';height:12px;width:12px;left:4px;bottom:4px;background-color:#fff;transition:all .4s}.switch .slider.round:before{border-radius:50%}.switch input:checked+.slider:before{left:19px}.switch input:checked+.slider{background-color:#75bd11}
-.table td{font-size:12px}.dataTables_info{font-size:var(--text-xs);font-weight:600;font-style:italic;color:#75787d}.paginate_button{display:inline-flex;align-items:center;justify-content:center;height:22px;min-width:22px;padding:1px 8px;margin-left:3px;color:#8b959e;border:1px solid transparent;border-radius:1px;background:#fff;font-size:12px;cursor:pointer}.paginate_button:hover:not(:disabled),.paginate_button.current{color:#fff;background:#1a4f85}.paginate_button:disabled{color:#8b959e;background:#fff;cursor:not-allowed;opacity:.6}.page-size-inline{display:inline-flex;align-items:center;gap:6px;margin-left:14px;font-size:var(--text-sm);color:var(--muted)}.page-size-inline select{margin:0}.group-row{cursor:pointer;background:#fff;font-weight:600}.group-row td{color:var(--muted)}.group-row .cell-title{color:var(--ink)}.group-row:hover{background:#f7fbfe}.group-row.open{background:#e6f0fa}.group-chevron{display:inline-block;margin-right:6px;color:#5f6b76;transition:transform .12s}.group-row.open .group-chevron{transform:rotate(90deg)}.group-row .cell-meta{display:inline;margin:0 0 0 8px;font-weight:400}.group-child-row td:first-child{padding-left:30px;border-left:2px solid #cfdbe6}
+.switch{position:relative;display:inline-flex;align-items:center;width:28px;height:16px;margin:0;flex:0 0 auto}.switch input{display:none}.switch .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#cfcfcf;transition:all .4s}.switch .slider.round{border-radius:8px}.switch .slider:before{position:absolute;content:'';height:12px;width:12px;left:2px;top:2px;background-color:#fff;transition:all .4s}.switch .slider.round:before{border-radius:50%}.switch input:checked+.slider:before{left:14px}.switch input:checked+.slider{background-color:#1a4f85}.switch input:checked:disabled+.slider{background-color:#83A0BE;cursor:not-allowed}.switch input:disabled+.slider{cursor:not-allowed}
+.table td{font-size:12px}.dataTables_info{font-size:var(--text-xs);font-weight:600;font-style:italic;color:#75787d}.paginate_button{display:inline-flex;align-items:center;justify-content:center;height:22px;min-width:22px;padding:1px 8px;margin-left:3px;color:#8b959e;border:1px solid transparent;border-radius:1px;background:#fff;font-size:12px;cursor:pointer}.paginate_button:hover:not(:disabled),.paginate_button.current{color:#fff;background:#1a4f85}.paginate_button:disabled{color:#8b959e;background:#fff;cursor:not-allowed;opacity:.6}.page-size-inline{display:inline-flex;align-items:center;gap:6px;margin-left:14px;font-size:var(--text-sm);color:var(--muted)}.page-size-inline select{margin:0;appearance:none;-webkit-appearance:none;-moz-appearance:none;padding-right:26px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2366748A' viewBox='0 0 16 16'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>");background-repeat:no-repeat;background-position:right 8px center;background-size:10px 10px}.group-row{cursor:pointer;background:#fff;font-weight:600}.group-row td{color:#000}.group-row .cell-title{color:#000}.group-row:hover{background:#f7fbfe}.group-row.open{background:#F7FBFC}.group-chevron{display:inline-block;margin-right:6px;color:#000;transition:transform .12s}.group-row.open .group-chevron{transform:rotate(90deg)}.group-row .cell-meta{display:inline;margin:0 0 0 8px;font-weight:400}.group-child-row td:first-child{padding-left:30px;border-left:2px solid #cfdbe6}
 /* Phase 3: Main-edit accordion cards — same .card base as everything else, but deliberately
    denser when collapsed (this drawer can hold four-plus of these stacked at once, so a collapsed
    row reading as a full padded block reads as chunky rather than scannable). Only affects cards
@@ -220,26 +223,27 @@ strong{font-weight:600}
   </header>
 
   <main class="main">
-    <section class="toolbar" aria-label="Care Setting list controls">
+    <section class="toolbar" aria-label="Care setting list controls">
       <div class="toolbar-left">
-        <h1>Care Settings</h1>
+        <h1>Care settings</h1>
       </div>
       <div class="toolbar-right">
-        <button class="btn primary" type="button" onclick="openPanel()">+ Create New</button>
+        <button class="btn primary" type="button" onclick="openPanel()">Create new</button>
       </div>
     </section>
     <section class="filter-bar" aria-label="Search and filters">
       <div class="filters">
-        <div class="picker" style="max-width:340px;flex:1 1 220px;"><label for="searchInput" class="visually-hidden">Search Care Settings</label><input type="text" class="text" id="searchInput" placeholder="Search by name" oninput="onDashboardSearchInput(this.value)"></div>
-        <div class="picker" style="max-width:220px;"><button type="button" class="filter-select-btn" id="statusFilterBtn" aria-haspopup="true" aria-expanded="false" onclick="toggleFilterPicker('status')">Status: All</button><div class="picker-menu" id="statusFilterMenu"></div></div>
-        <div class="picker" style="max-width:220px;"><button type="button" class="filter-select-btn" id="visitCategoryFilterBtn" aria-haspopup="true" aria-expanded="false" onclick="toggleFilterPicker('visitCategory')">Visit Category: All</button><div class="picker-menu" id="visitCategoryFilterMenu"></div></div>
+        <div class="picker" style="max-width:340px;flex:1 1 220px;"><label for="searchInput" class="visually-hidden">Search care settings</label><div class="search-input-wrap"><input type="text" class="text" id="searchInput" placeholder="Search care settings..." oninput="onDashboardSearchInput(this.value)"><span class="search-input-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg></span></div></div>
+        <div class="picker" style="max-width:220px;"><button type="button" class="filter-select-btn" id="statusFilterBtn" aria-haspopup="true" aria-expanded="false" onclick="toggleFilterPicker('status')"><span class="filter-select-btn-label">Status: All</span><span class="dropdown-caret"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg></span></button><div class="picker-menu" id="statusFilterMenu"></div></div>
+        <div class="picker" style="max-width:220px;"><button type="button" class="filter-select-btn" id="visitCategoryFilterBtn" aria-haspopup="true" aria-expanded="false" onclick="toggleFilterPicker('visitCategory')"><span class="filter-select-btn-label">Visit category: All</span><span class="dropdown-caret"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg></span></button><div class="picker-menu" id="visitCategoryFilterMenu"></div></div>
         <button type="button" class="link-btn" id="clearFiltersBtn" style="display:none;" onclick="clearAllFilters()">Clear all</button>
       </div>
     </section>
 
     <section class="content">
-      <div class="table-shell" id="dashboardTableShell" style="max-height:560px;overflow-y:auto;">
-        <table class="table" aria-label="Care Settings">
+      <div class="table-shell" id="dashboardTableShell">
+        <div class="table-scroll" id="dashboardTableWrap">
+        <table class="table" aria-label="Care settings">
           <colgroup>
             <col style="width: 18%">
             <col style="width: 10%">
@@ -253,20 +257,35 @@ strong{font-weight:600}
           </colgroup>
           <thead>
             <tr>
-              <th data-key-th="name"><button type="button" class="sort-th" onclick="setDashboardSort('name')">Care Setting<span class="sort-glyph"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-up" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M3.204 11h9.592L8 5.519zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659"/></svg></span></button></th>
-              <th>Short Name</th>
-              <th>Default Visit Category</th>
+              <th data-key-th="name"><button type="button" class="sort-th" onclick="setDashboardSort('name')">Care setting<span class="sort-glyph"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg></span></button></th>
+              <th data-key-th="shortName"><button type="button" class="sort-th" onclick="setDashboardSort('shortName')">Short name<span class="sort-glyph"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg></span></button></th>
+              <th>Default visit category</th>
               <th>Duration</th>
-              <th>Active Trackerboards</th>
-              <th data-key-th="updated"><button type="button" class="sort-th" onclick="setDashboardSort('updated')">Updated On<span class="sort-glyph"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-up" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M3.204 11h9.592L8 5.519zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659"/></svg></span></button></th>
-              <th data-key-th="updatedBy"><button type="button" class="sort-th" onclick="setDashboardSort('updatedBy')">Updated By<span class="sort-glyph"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-up" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M3.204 11h9.592L8 5.519zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659"/></svg></span></button></th>
-              <th data-key-th="status"><button type="button" class="sort-th" onclick="setDashboardSort('status')">Status<span class="sort-glyph"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-up" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M3.204 11h9.592L8 5.519zm-.753-.659 4.796-5.48a1 1 0 0 1 1.506 0l4.796 5.48c.566.647.106 1.659-.753 1.659H3.204a1 1 0 0 1-.753-1.659"/></svg></span></button></th>
+              <th>Active trackerboards</th>
+              <th data-key-th="updated"><button type="button" class="sort-th" onclick="setDashboardSort('updated')">Updated on<span class="sort-glyph"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg></span></button></th>
+              <th data-key-th="updatedBy"><button type="button" class="sort-th" onclick="setDashboardSort('updatedBy')">Updated by<span class="sort-glyph"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg></span></button></th>
+              <th data-key-th="status"><button type="button" class="sort-th" onclick="setDashboardSort('status')">Status<span class="sort-glyph"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg></span></button></th>
               <th class="actions">Actions</th>
             </tr>
           </thead>
           <tbody id="tableBody"></tbody>
         </table>
-        <div class="table-scroll-sentinel" id="dashboardScrollSentinel" aria-hidden="true"></div>
+        </div>
+        <div class="table-footer" id="dashboardFooter">
+          <span class="dataTables_info" id="dashboardInfo"></span>
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div class="pager" id="dashboardPager"></div>
+            <div class="page-size-inline">
+              <label for="pageSizeSelect">Results per page</label>
+              <select class="control compact" id="pageSizeSelect" onchange="changeDashboardPageSize(this.value)">
+                <option value="10">10</option>
+                <option value="25" selected>25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
@@ -277,18 +296,18 @@ strong{font-weight:600}
 <aside class="drawer panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle" aria-hidden="true">
   <header class="drawer-head panel-header">
     <div>
-      <h2 class="drawer-title" id="panelTitle">Create New Care Setting</h2>
+      <h2 class="drawer-title" id="panelTitle">Create new care setting</h2>
       <p class="drawer-sub" id="panelCodeSub" style="display:none;"></p>
     </div>
     <div class="drawer-actions right">
-      <button class="icon-btn close" type="button" aria-label="Close" onclick="requestClose()"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/></svg></button>
+      <button class="icon-btn close" type="button" aria-label="Close" onclick="requestClose()"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/></svg></button>
     </div>
   </header>
   <div class="panel-scroll-wrap" style="display:flex;flex-direction:column;min-height:0;">
   <div class="sub-cs-banner" id="addToMainBanner" style="display:none;">
     <div style="display:flex; align-items:center; gap:10px;">
       <button type="button" class="btn tertiary small" onclick="goBackFromAddSub()">← Back</button>
-      <span>Adding a new Sub Care Setting to <strong><span id="addToMainBannerName"></span></strong></span>
+      <span>Adding a new sub care setting to <strong><span id="addToMainBannerName"></span></strong></span>
     </div>
   </div>
 
@@ -301,56 +320,46 @@ strong{font-weight:600}
         <div class="field-hint-warn" id="nameFieldSimilar" style="display:none;"></div>
       </div>
       <div class="field">
-        <label for="shortNameField">Short Name</label>
+        <label for="shortNameField">Short name <span class="req">*</span></label>
         <input type="text" id="shortNameField" placeholder="e.g. ICU" oninput="onNameInput()" aria-describedby="shortNameFieldError">
         <div class="field-error" id="shortNameFieldError"></div>
       </div>
     </div>
-    <!-- Phase 3: Main-edit mode only. Sits where the create-mode grouping toggle would be, since
-         the two are mutually exclusive (a Main being edited already has its Subs; a new record
-         still gets to choose). Replaces the old subCsBanner's "+ Add Sub Care Setting" button. -->
-    <div id="mainEditAddSubRow" class="section-toolbar" style="display:none;">
-      <span style="font-weight:600;color:#000;font-size:var(--text-sm);">Sub Care Settings</span>
-      <button type="button" class="btn tertiary small" onclick="openAddSubToMain(editingMainId)">+ Add Sub Care Setting</button>
-    </div>
-    <div class="field full" id="groupModeField" style="margin:0 0 18px;">
-      <div style="display:flex; align-items:center; gap:8px; padding:2px 0 6px;">
-        <label class="switch" onclick="event.stopPropagation()">
-          <input type="checkbox" id="groupModeToggle" onchange="handleGroupModeToggle()"><span class="slider round"></span>
-        </label>
-        <span style="font-weight:600;color:#000;font-size:var(--text-sm);">Sub Care Settings</span>
-        <span class="info" onclick="toggleTip(this, event)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg><span class="tip">Independent care area grouped under a Care Setting.</span></span>
-        <button class="btn small" type="button" id="addSubSettingBtn" style="margin-left:auto; display:none;" onclick="addSubSettingBlock()">+ Add sub-setting</button>
+    <div class="field full" id="groupModeField" style="margin:0 0 8px;">
+      <div id="subGroupContainer" style="border:1px solid var(--line);padding:10px;background:#fff;">
+        <div id="subToggleRow" class="toggle-row">
+          <label class="switch" onclick="event.stopPropagation()">
+            <input type="checkbox" id="groupModeToggle" onchange="handleGroupModeToggle()"><span class="slider round"></span>
+          </label>
+          <span class="toggle-row-label">Sub care settings</span>
+          <span class="info" onclick="toggleTip(this, event)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg><span class="tip">Independent care area grouped under a care setting.</span></span>
+          <button class="btn secondary small" type="button" id="addSubSettingBtn" style="display:none;" onclick="addSubSettingBlock()">Add sub setting</button>
+        </div>
+        <div id="subSettingsContainer" style="margin:10px -10px -10px -10px;"></div>
       </div>
-      <hr style="border:none;border-top:1px solid #edf0f2;margin:14px 0 0;">
     </div>
-    <div id="subSettingsContainer"></div>
 
 
-    <div class="flat-section" id="sec-clinical">
-      <h2 class="flat-section-title">Visit Defaults <span class="info" onclick="toggleTip(this, event)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg><span class="tip">Default values passed to Trackerboards and other tools.</span></span></h2>
+    <div class="flat-section" id="sec-clinical" style="border-bottom:0;">
       <div class="form-grid">
         <div class="field">
-          <label for="defaultVisitCategory">Default Visit Category</label>
-          <select id="defaultVisitCategory"></select>
+          <label for="defaultVisitCategory">Default visit category <span class="req">*</span></label>
+          <select id="defaultVisitCategory" aria-describedby="defaultVisitCategoryError"></select>
+          <div class="field-error" id="defaultVisitCategoryError"></div>
         </div>
         <div class="field">
-          <div class="field-label-row">
-            <label for="defaultDurationValue">Duration</label>
-            <span class="info" onclick="toggleTip(this, event)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg>
-              <span class="tip">Expected length of stay — not a scheduling slot or SLA timer.</span>
-            </span>
-          </div>
+          <label for="defaultDurationValue">Duration</label>
           <div class="inline-pair">
-            <input type="number" id="defaultDurationValue" min="1">
+            <input type="text" id="defaultDurationValue" placeholder="e.g. 30" inputmode="numeric">
             <select id="defaultDurationUnit">
+              <option value="" selected disabled hidden>Select</option>
               <option>minutes</option>
               <option>hours</option>
             </select>
           </div>
         </div>
         <div class="field">
-          <label for="chiefComplaintForm">Intake Form</label>
+          <label for="chiefComplaintForm">Forms</label>
           <select id="chiefComplaintForm" onchange="renderChiefComplaintFormLink()"></select>
           
         </div>
@@ -358,7 +367,7 @@ strong{font-weight:600}
     </div>
 
     <div class="flat-section" id="sec-dependencies">
-      <h2 class="flat-section-title">Active Trackerboards</h2>
+      <h2 class="flat-section-title">Active trackerboards</h2>
       <div id="dependenciesBody"></div>
     </div>
   </div>
@@ -385,7 +394,7 @@ strong{font-weight:600}
              modal was opened for. -->
         <select class="control compact" id="auditFilterSelect" style="display:none;" onchange="renderAuditHistory()"></select>
       </div>
-      <table class="history"><thead><tr><th>Date</th><th>Event</th><th id="auditSourceHeader" style="display:none;">Care Setting</th><th>By</th></tr></thead><tbody id="auditHistoryBody"></tbody></table>
+      <table class="history"><thead><tr><th>Date</th><th>Event</th><th id="auditSourceHeader" style="display:none;">care setting</th><th>By</th></tr></thead><tbody id="auditHistoryBody"></tbody></table>
     </div>
     <div class="modal-foot"><button class="btn" type="button" onclick="closeAuditHistory()">Close</button></div>
   </section>
@@ -395,7 +404,7 @@ strong{font-weight:600}
 <script>
 const ICONS = {
   x: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/></svg>',
-  chevronRight: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/></svg>',
+  chevronRight: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/></svg>',
   threeDotsVertical: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/></svg>',
   infoCircle: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg>',
   checkCircle: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-check-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/></svg>',
@@ -404,7 +413,7 @@ const ICONS = {
   trash: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/><path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L13.882 4zM2.5 3h11V2h-11z"/></svg>',
   // Accordion open/close indicator — used on every collapsible sub-card (create-mode
   // sub-settings and the Phase 3 Main-edit accordion below) so both share one glyph.
-  chevronDown: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"/></svg>',
+  chevronDown: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>',
   // Used only for removing a single line item (one Resource row) — visually lighter than trash so
   // a Unit full of resource rows doesn't read as a wall of identical destructive icons.
   dashCircle: '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-dash-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8"/></svg>'
@@ -567,7 +576,7 @@ function lifecycleWarning(cs, action) {
     if (cs.mainId) {
       const siblingCount = CARE_SETTINGS.filter(c => c.mainId === cs.mainId).length;
       if (siblingCount <= 1) {
-        return `Permanently delete "${cs.name}"? It's the only Sub Care Setting in "${mainLabel(cs.mainId)}" — deleting it removes "${mainLabel(cs.mainId)}" too, and both names become available again.`;
+        return `Permanently delete "${cs.name}"? It's the only sub care setting in "${mainLabel(cs.mainId)}" — deleting it removes "${mainLabel(cs.mainId)}" too, and both names become available again.`;
       }
     }
     return `Permanently delete "${cs.name}"?`;
@@ -581,8 +590,8 @@ function lifecycleWarning(cs, action) {
 // state.mode: "single" (normal create/edit drawer — the default) or "mainEdit" (Phase 3 — the
 // unified drawer for a Main and all its Sub Care Settings; see openMainEditDrawer).
 const state = { mode: "single", status: "draft", dirty: false, readonly: false, suppressTrack: false, touched: new Set(), blocking: 0, sort: "updated", dir: "desc", page: 1, pageSize: 10 };
-const DASHBOARD_PAGE_SIZE = 20;
-let dashboardVisibleCount = DASHBOARD_PAGE_SIZE;
+const DASHBOARD_ROW_HEIGHT = 36;
+state.pageSize = 25;
 let dashboardLastSignature = "";
 let editingIndex = null;
 // Phase 3: which Main is open in the unified Main-edit drawer. Mirrors editingIndex's role for
@@ -593,8 +602,8 @@ let editingMainId = null;
 // specific, already-existing Main by reference — never by retyping its label.
 let addToMainId = null;
 
-function optionsHtml(items) { return items.map(v => `<option>${v}</option>`).join(""); }
-function formOptionsHtml(items) { return items.map(f => `<option value="${f.id}">${f.name}</option>`).join(""); }
+function optionsHtml(items) { return `<option value="" selected disabled hidden>Select</option>` + items.map(v => `<option>${v}</option>`).join(""); }
+function formOptionsHtml(items) { return `<option value="" selected disabled hidden>Select</option>` + items.map(f => `<option value="${f.id}">${f.name}</option>`).join(""); }
 function formById(id) { return CHIEF_COMPLAINT_FORMS.find(f => f.id === id); }
 function renderChiefComplaintFormLink() {
   const link = document.getElementById("viewFormLink");
@@ -793,9 +802,10 @@ function selectAllDashboardFilter(type) {
 function updateFilterButtonLabel(type) {
   const btn = document.getElementById(type + "FilterBtn");
   if (!btn) return;
-  const label = type === "status" ? "Status" : "Visit Category";
+  const label = type === "status" ? "Status" : "Visit category";
   const count = dashboardFilters[type].length;
-  btn.textContent = label + ": " + (count ? count + " selected" : "All");
+  const textEl = btn.querySelector(".filter-select-btn-label");
+  if (textEl) textEl.textContent = label + ": " + (count ? count + " selected" : "All");
 }
 function toggleDashboardFilter(type, value, checked) {
   const arr = dashboardFilters[type];
@@ -817,6 +827,7 @@ function toggleFilterPicker(type) {
 }
 function sortValue(cs, key) {
   if (key === "name") return (cs.name || "").toLowerCase();
+  if (key === "shortName") return (cs.shortName || "").toLowerCase();
   if (key === "status") return cs.status || "";
   if (key === "updatedBy") return (cs.by || "").toLowerCase();
   return cs.updated || "";
@@ -890,21 +901,24 @@ function renderTable() {
     th.setAttribute("aria-sort", th.dataset.keyTh === state.sort ? (state.dir === "asc" ? "ascending" : "descending") : "none");
   });
 
-  // Infinite scroll: a "page" of pageSize is replaced by a running visible-count that grows as
-  // the user scrolls, reset to the first batch whenever the search/filter/sort signature changes.
-  // Pagination still counts a group as ONE entry regardless of how many children it has, and a
-  // group's children always render together — a group is never split across the visible-count cut.
+  // Pagination: a group counts as ONE entry regardless of how many children it has, and a
+  // group's children always render together — a group is never split across a page boundary.
   const signature = JSON.stringify(dashboardFilters) + "|" + state.sort + state.dir;
   if (signature !== dashboardLastSignature) {
-    dashboardVisibleCount = DASHBOARD_PAGE_SIZE;
+    state.page = 1;
     dashboardLastSignature = signature;
-    const shellEl = document.getElementById("dashboardTableShell");
-    if (shellEl) shellEl.scrollTop = 0;
   }
-  const pageEntries = entries.slice(0, dashboardVisibleCount);
+  const totalEntries = entries.length;
+  const totalPages = Math.max(1, Math.ceil(totalEntries / state.pageSize));
+  if (state.page > totalPages) state.page = totalPages;
+  if (state.page < 1) state.page = 1;
+  const startIdx = (state.page - 1) * state.pageSize;
+  const pageEntries = entries.slice(startIdx, startIdx + state.pageSize);
+
+  renderDashboardPagination(totalEntries, startIdx, pageEntries.length);
 
   if (!pageEntries.length) {
-    tbody.innerHTML = '<tr><td colspan="9"><div class="empty"><strong>No Care Settings match the current filters.</strong><span class="muted">Clear a filter or create a new Care Setting.</span></div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9"><div class="empty"><strong>No care settings match the current filters.</strong><span class="muted">Clear a filter or create a new care setting.</span></div></td></tr>';
   } else {
     tbody.innerHTML = "";
     const rowHtml = (cs, idx, isChild) => {
@@ -915,7 +929,7 @@ function renderTable() {
         <td><span class="cell-title">${cs.name}</span></td>
         <td>${cs.shortName || "—"}</td>
         <td>${cs.visitCategory || "—"}</td>
-        <td>${cs.duration ? (cs.duration.value + " " + cs.duration.unit) : "—"}</td>
+        <td>${cs.duration ? (cs.duration.value + (cs.duration.unit ? " " + cs.duration.unit : "")) : "—"}</td>
         <td>${activeTrackerboardCellHtml(cs)}</td>
         <td>${cs.updated || "—"}</td>
         <td>${cs.by || "—"}</td>
@@ -935,7 +949,7 @@ function renderTable() {
       groupTr.onclick = () => toggleGroupRow(entry.mainId);
       const meta = mainRowMeta(entry.children);
       groupTr.innerHTML = `
-        <td><span class="group-chevron"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/></svg></span><span class="cell-title">${entry.groupName}</span><span class="cell-meta">${entry.children.length} sub-settings</span></td>
+        <td><span class="group-chevron"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-right-fill" viewBox="0 0 16 16"><path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z"/></svg></span><span class="cell-title">${entry.groupName}</span></td>
         <td>${entry.shortName || "—"}</td>
         <td>—</td><td>—</td><td>—</td>
         <td>${meta.updated || "—"}</td>
@@ -950,18 +964,49 @@ function renderTable() {
     });
   }
 }
-function initDashboardInfiniteScroll() {
-  const shell = document.getElementById("dashboardTableShell");
-  if (!shell) return;
-  shell.addEventListener("scroll", () => {
-    const nearBottom = shell.scrollTop + shell.clientHeight >= shell.scrollHeight - 80;
-    if (!nearBottom) return;
-    const total = getFilteredGroupedEntries().length;
-    if (dashboardVisibleCount < total) {
-      dashboardVisibleCount = Math.min(total, dashboardVisibleCount + DASHBOARD_PAGE_SIZE);
-      renderTable();
-    }
-  });
+function renderDashboardPagination(total, startIdx, shownCount) {
+  const infoEl = document.getElementById("dashboardInfo");
+  const pagerEl = document.getElementById("dashboardPager");
+  if (!infoEl || !pagerEl) return;
+  const from = total === 0 ? 0 : startIdx + 1;
+  const to = total === 0 ? 0 : startIdx + shownCount;
+  infoEl.textContent = `Showing ${from} to ${to} of ${total} result${total === 1 ? "" : "s"}`;
+
+  const totalPages = Math.max(1, Math.ceil(total / state.pageSize));
+  const current = state.page;
+  const iconFirst = '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-chevron-double-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/><path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/></svg>';
+  const iconPrev = '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-chevron-left" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/></svg>';
+  const iconNext = '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-chevron-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/></svg>';
+  const iconLast = '<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708"/><path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708"/></svg>';
+
+  // Show up to 5 page-number buttons, centered on the current page where possible.
+  let windowStart = Math.max(1, current - 2);
+  let windowEnd = Math.min(totalPages, windowStart + 4);
+  windowStart = Math.max(1, windowEnd - 4);
+  let numberButtons = "";
+  for (let p = windowStart; p <= windowEnd; p++) {
+    numberButtons += `<button type="button" class="paginate_button${p === current ? " current" : ""}" onclick="goToDashboardPage(${p})" aria-label="Page ${p}" ${p === current ? 'aria-current="page"' : ""}>${p}</button>`;
+  }
+
+  pagerEl.innerHTML = `
+    <button type="button" class="paginate_button" onclick="goToDashboardPage(1)" ${current === 1 ? "disabled" : ""} aria-label="First page">${iconFirst}</button>
+    <button type="button" class="paginate_button" onclick="goToDashboardPage(${current - 1})" ${current === 1 ? "disabled" : ""} aria-label="Previous page">${iconPrev}</button>
+    ${numberButtons}
+    <button type="button" class="paginate_button" onclick="goToDashboardPage(${current + 1})" ${current === totalPages ? "disabled" : ""} aria-label="Next page">${iconNext}</button>
+    <button type="button" class="paginate_button" onclick="goToDashboardPage(${totalPages})" ${current === totalPages ? "disabled" : ""} aria-label="Last page">${iconLast}</button>
+  `;
+
+  const sizeSelect = document.getElementById("pageSizeSelect");
+  if (sizeSelect && Number(sizeSelect.value) !== state.pageSize) sizeSelect.value = String(state.pageSize);
+}
+function goToDashboardPage(page) {
+  state.page = page;
+  renderTable();
+}
+function changeDashboardPageSize(size) {
+  state.pageSize = Number(size);
+  state.page = 1;
+  renderTable();
 }
 // Phase 3 (revised): every quick action below can be triggered from the dashboard row menu OR
 // from a Sub's own menu inside the Main-edit accordion (rowActionsHtml is shared by both). The
@@ -980,29 +1025,29 @@ async function quickInactivate(idx) {
   const cs = CARE_SETTINGS[idx];
   if (!cs || cs.status !== "active") return;
   const msg = lifecycleWarning(cs, "deactivate");
-  if (!(await confirmBox("Deactivate this Care Setting?", msg, "Deactivate", true))) return;
+  if (!(await confirmBox("Deactivate this care setting?", msg, "Deactivate", true))) return;
   cs.status = "inactive";
   cs.updated = TODAY_STR; cs.by = CURRENT_USER;
   logAuditEvent(cs.code, "Deactivated");
   afterCareSettingMutation(cs.mainId, cs.code);
-  toast("Care Setting deactivated.");
+  toast("Care setting deactivated.");
 }
 async function quickReactivate(idx) {
   const cs = CARE_SETTINGS[idx];
   if (!cs || cs.status !== "inactive") return;
-  if (!(await confirmBox("Reactivate this Care Setting?", `"${cs.name}" will become available for new use again.`, "Reactivate"))) return;
+  if (!(await confirmBox("Reactivate this care setting?", `"${cs.name}" will become available for new use again.`, "Reactivate"))) return;
   cs.status = "active";
   cs.updated = TODAY_STR; cs.by = CURRENT_USER;
   logAuditEvent(cs.code, "Reactivated");
   afterCareSettingMutation(cs.mainId, cs.code);
-  toast("Care Setting reactivated.");
+  toast("Care setting reactivated.");
 }
 async function quickDelete(idx) {
   const cs = CARE_SETTINGS[idx];
   if (!cs || cs.status !== "draft") return;
   const noDeps = !hasAnyDeps(csDependencies(cs));
   if (!noDeps) return;
-  if (await confirmBox("Delete draft Care Setting?", lifecycleWarning(cs, "delete"), "Delete", true)) {
+  if (await confirmBox("Delete draft care setting?", lifecycleWarning(cs, "delete"), "Delete", true)) {
     const mainId = cs.mainId;
     const code = cs.code;
     CARE_SETTINGS.splice(idx, 1);
@@ -1016,7 +1061,7 @@ async function quickDelete(idx) {
       mainDeleted = true;
       // The Main-edit drawer can't stay open on a Main that no longer exists.
       if (state.mode === "mainEdit" && editingMainId === mainId) closePanel();
-      toast(`Draft deleted. "${label}" had no other Sub Care Settings, so it's gone too.`);
+      toast(`Draft deleted. "${label}" had no other sub care settings, so it's gone too.`);
     }
     renderTable();
     if (!mainDeleted && mainId && state.mode === "mainEdit" && editingMainId === mainId) {
@@ -1121,7 +1166,7 @@ function renderSimilarNameHint() {
   if (!hint) return;
   const name = document.getElementById("nameField").value.trim();
   const match = name ? findSimilarCareSetting(name, editingIndex) : null;
-  hint.textContent = match ? `Possible duplicate — this looks similar to the existing "${match.name}". Continuing will save this as a separate Care Setting.` : "";
+  hint.textContent = match ? `Possible duplicate — this looks similar to the existing "${match.name}". Continuing will save this as a separate care setting.` : "";
   hint.style.display = match ? "" : "none";
 }
 
@@ -1158,8 +1203,8 @@ function confirmDraftConversionModal() {
     chiefComplaintForm: document.getElementById("chiefComplaintForm").value
   };
   return new Promise(resolve => openModal({
-    title: "Add sub-settings to this Care Setting?",
-    body: `<p style="margin:0 0 12px;line-height:1.5">The first sub-setting will copy this Care Setting's Visit Category, Duration, and Intake Form. You'll still need to name it.</p>
+    title: "Add sub-settings to this care setting?",
+    body: `<p style="margin:0 0 8px;line-height:1.5">The first sub-setting will copy this care setting's Visit Category, Duration, and Intake Form. You'll still need to name it.</p>
       <label style="display:flex;align-items:center;gap:8px;font-size:var(--text-sm);cursor:pointer;">
         <input type="checkbox" id="carryDefaultsCheckbox" checked>
         Use these same details for any sub-settings I add later
@@ -1192,7 +1237,7 @@ async function handleGroupModeToggle() {
       return n && n.value.trim();
     });
     if (hasContent) {
-      const proceed = await confirmBox("Turn off Sub Care Settings?", "This discards everything entered for the sub-settings and returns to a single standalone Care Setting.", "Turn off", true);
+      const proceed = await confirmBox("Turn off sub care settings?", "This discards everything entered for the sub-settings and returns to a single standalone care setting.", "Turn off", true);
       if (!proceed) { toggle.checked = true; return; }
     }
     carriedSubDefaults = null;
@@ -1202,6 +1247,10 @@ async function handleGroupModeToggle() {
 }
 function onGroupModeChange() {
   const isOn = isGroupCreateMode();
+  const wrap = document.getElementById("subGroupContainer");
+  if (wrap) wrap.style.background = isOn ? "#EDF2F9" : "#fff";
+  const subContainer = document.getElementById("subSettingsContainer");
+  if (subContainer) subContainer.style.borderTop = isOn ? "1px solid var(--line)" : "none";
   document.getElementById("nameFieldLabel").textContent = "Name";
   // A Main Care Setting has no Clinical Defaults of its own — only its sub-settings carry that
   // config, each independently (its own Visit Category, Duration, Chief Complaint Form). The
@@ -1224,38 +1273,37 @@ function subSettingBlockHtml(subId) {
   return `
   <section class="card" data-sub-id="${subId}">
     <header class="card-head" onclick="toggleReferenceSection(this)">
-      <h2 class="card-title"><span class="card-chevron">${ICONS.chevronDown}</span> <span id="${scope}heading">Sub Care Setting</span></h2>
+      <h2 class="card-title sub-card-title"><span class="card-chevron">${ICONS.chevronDown}</span> <span id="${scope}heading">Sub care setting</span></h2>
       <button class="icon-btn mini danger-icon sub-setting-remove-block" type="button" aria-label="Remove sub-setting" onclick="event.stopPropagation(); removeSubSettingBlock('${subId}')">${ICONS.trash}</button>
     </header>
     <div class="card-body">
       <div class="form-grid">
         <div class="field">
           <label for="${scope}nameField">Name <span class="req">*</span></label>
-          <input type="text" id="${scope}nameField" placeholder="e.g. ICU" oninput="onSubNameInput('${subId}')" aria-describedby="${scope}nameFieldError">
+          <input type="text" id="${scope}nameField" placeholder="e.g. Ward A" oninput="onSubNameInput('${subId}')" aria-describedby="${scope}nameFieldError">
           <div class="field-error" id="${scope}nameFieldError"></div>
         </div>
         <div class="field">
-          <label for="${scope}shortNameField">Short Name</label>
-          <input type="text" id="${scope}shortNameField" placeholder="e.g. ICU" oninput="onSubNameInput('${subId}')" aria-describedby="${scope}shortNameFieldError">
+          <label for="${scope}shortNameField">Short name <span class="req">*</span></label>
+          <input type="text" id="${scope}shortNameField" placeholder="e.g. WA" oninput="onSubNameInput('${subId}')" aria-describedby="${scope}shortNameFieldError">
           <div class="field-error" id="${scope}shortNameFieldError"></div>
         </div>
       </div>
-      <hr style="border:none;border-top:1px solid #edf0f2;margin:16px 0;">
-      <h3 style="margin:0 0 10px; font-size:var(--text-base); font-weight:600;">Visit Defaults</h3>
-      <div class="form-grid">
+      <div class="form-grid" style="margin-top:9px;">
         <div class="field">
-          <label for="${scope}defaultVisitCategory">Default Visit Category</label>
-          <select id="${scope}defaultVisitCategory">${optionsHtml(VISIT_CATEGORIES)}</select>
+          <label for="${scope}defaultVisitCategory">Default visit category <span class="req">*</span></label>
+          <select id="${scope}defaultVisitCategory" aria-describedby="${scope}defaultVisitCategoryError">${optionsHtml(VISIT_CATEGORIES)}</select>
+          <div class="field-error" id="${scope}defaultVisitCategoryError"></div>
         </div>
         <div class="field">
           <label for="${scope}defaultDurationValue">Duration</label>
           <div class="inline-pair">
-            <input type="number" id="${scope}defaultDurationValue" min="1" value="30">
-            <select id="${scope}defaultDurationUnit"><option>minutes</option><option>hours</option></select>
+            <input type="text" id="${scope}defaultDurationValue" placeholder="e.g. 30" inputmode="numeric">
+            <select id="${scope}defaultDurationUnit"><option value="" selected disabled hidden>Select</option><option>minutes</option><option>hours</option></select>
           </div>
         </div>
         <div class="field">
-          <label for="${scope}chiefComplaintForm">Intake Form</label>
+          <label for="${scope}chiefComplaintForm">Forms</label>
           <select id="${scope}chiefComplaintForm">${formOptionsHtml(CHIEF_COMPLAINT_FORMS)}</select>
         </div>
       </div>
@@ -1300,9 +1348,9 @@ function refreshSubSettingHeadings() {
     const subId = block.dataset.subId;
     const nameField = document.getElementById(subFieldScope(subId) + "nameField");
     const heading = document.getElementById(subFieldScope(subId) + "heading");
-    if (heading) heading.textContent = (nameField && nameField.value.trim()) ? nameField.value.trim() : "Sub Care Setting";
+    if (heading) heading.textContent = (nameField && nameField.value.trim()) ? nameField.value.trim() : "Sub care setting";
     const removeBtn = block.querySelector(".sub-setting-remove-block");
-    if (removeBtn) removeBtn.disabled = blocks.length <= 1;
+    if (removeBtn) removeBtn.disabled = state.mode !== "mainEdit" && blocks.length <= 1;
   });
 }
 function onSubNameInput(subId) {
@@ -1326,14 +1374,19 @@ function collectRecordFor(fieldScope, mainId) {
     mainId: mainId || null
   };
 }
-function computeIssuesFor(fieldScope) {
+function computeIssuesFor(fieldScope, forActivation) {
   const name = document.getElementById(fieldScope + "nameField").value.trim();
   const shortNameField = document.getElementById(fieldScope + "shortNameField");
   const shortName = shortNameField ? shortNameField.value.trim() : "";
   const basic = [];
-  if (!name) basic.push("Care Setting Name is required.");
+  if (!name) basic.push("Care setting name is required.");
   else if (isNameTaken(name, editingIndex)) basic.push("This name is already in use.");
-  if (shortName && isNameTaken(shortName, editingIndex)) basic.push("This Short Name is already in use.");
+  if (!shortName) basic.push("Short name is required.");
+  else if (isNameTaken(shortName, editingIndex)) basic.push("This short name is already in use.");
+  if (forActivation) {
+    const visitCategoryEl = document.getElementById(fieldScope + "defaultVisitCategory");
+    if (visitCategoryEl && !visitCategoryEl.value) basic.push("Default visit category is required.");
+  }
   return { basic };
 }
 function collectAllSubRecords(mainId) {
@@ -1349,33 +1402,59 @@ function findBatchDuplicate(names, shortNames) {
   for (let i = 0; i < names.length; i++) {
     const n = names[i], sn = shortNames[i];
     const nameKey = n.toLowerCase();
-    if (seenNames.has(nameKey)) return `Sub-setting names must be unique — "${n}" is repeated.`;
+    if (seenNames.has(nameKey)) return `Sub setting names must be unique — "${n}" is repeated.`;
     seenNames.add(nameKey);
-    if (isNameTaken(n, editingIndex)) return `"${n}" is already used by another Care Setting or Main Care Setting.`;
+    if (isNameTaken(n, editingIndex)) return `"${n}" is already used by another care setting or Main care setting.`;
     if (sn) {
       const shortKey = sn.toLowerCase();
-      if (seenShort.has(shortKey)) return `Sub-setting Short Names must be unique — "${sn}" is repeated.`;
+      if (seenShort.has(shortKey)) return `Sub setting short names must be unique — "${sn}" is repeated.`;
       seenShort.add(shortKey);
-      if (isNameTaken(sn, editingIndex)) return `Short Name "${sn}" is already used by another Care Setting or Main Care Setting.`;
+      if (isNameTaken(sn, editingIndex)) return `Short Name "${sn}" is already used by another care setting or Main care setting.`;
     }
   }
   return null;
 }
+// Shared by saveGroupDraft() and activateGroup(): validates every sub-setting block inline (Name
+// and Short name — the same "mandatory for draft" bar a standalone Care Setting holds itself to),
+// showing the error on the field itself and returning the first invalid one so the caller can
+// expand its card and move focus there, instead of a single generic toast.
+function validateSubBlocksInline(blocks) {
+  let firstInvalid = null;
+  blocks.forEach(block => {
+    const scope = subFieldScope(block.dataset.subId);
+    const nameVal = document.getElementById(scope + "nameField").value.trim();
+    const shortVal = document.getElementById(scope + "shortNameField").value.trim();
+    const nameErr = !nameVal ? "Care setting name is required." : "";
+    const shortErr = !shortVal ? "Short name is required." : "";
+    showFieldError(scope + "nameField", nameErr);
+    showFieldError(scope + "shortNameField", shortErr);
+    if ((nameErr || shortErr) && !firstInvalid) {
+      firstInvalid = { block, field: nameErr ? scope + "nameField" : scope + "shortNameField" };
+    }
+  });
+  return firstInvalid;
+}
 async function saveGroupDraft() {
   state.touched.add("cardState-basic");
   const groupName = document.getElementById("nameField").value.trim();
-  showFieldError("nameField", !groupName ? "Main Care Setting Name is required." : "");
+  showFieldError("nameField", !groupName ? "Main care setting name is required." : "");
   if (!groupName) { document.getElementById("nameField").focus(); return; }
   // Phase 2: this flow only ever establishes a brand-new Main. Reusing an existing one has a
   // dedicated, reference-based path (openAddSubToMain) precisely so it can never happen by
   // free-text coincidence again — so a name match against an existing Main is a hard stop here,
   // not a silent join.
-  if (findMainByLabel(groupName)) { toast(`"${groupName}" already exists. To add to it, open one of its Sub Care Settings and use "Add Sub Care Setting."`); return; }
-  if (isNameTaken(groupName, editingIndex)) { toast(`"${groupName}" is already used by another Care Setting.`); return; }
+  if (findMainByLabel(groupName)) { toast(`"${groupName}" already exists. To add to it, open one of its sub care settings and use "Add sub care setting."`); return; }
+  if (isNameTaken(groupName, editingIndex)) { toast(`"${groupName}" is already used by another care setting.`); return; }
   const blocks = [...document.querySelectorAll("[data-sub-id]")];
+  const invalid = validateSubBlocksInline(blocks);
+  if (invalid) {
+    invalid.block.classList.remove("collapsed");
+    invalid.block.scrollIntoView({ behavior: "smooth", block: "center" });
+    document.getElementById(invalid.field).focus();
+    return;
+  }
   const names = blocks.map(b => document.getElementById(subFieldScope(b.dataset.subId) + "nameField").value.trim());
   const shortNames = blocks.map(b => document.getElementById(subFieldScope(b.dataset.subId) + "shortNameField").value.trim());
-  if (names.some(n => !n)) { toast("Every sub-setting needs a name."); return; }
   const dupError = findBatchDuplicate(names, shortNames);
   if (dupError) { toast(dupError); return; }
   const main = { id: nextMainId(), label: groupName };
@@ -1384,7 +1463,7 @@ async function saveGroupDraft() {
   // Converting an existing standalone Draft into a group: it can't have any dependents yet, so
   // it's simply replaced by its new sub-settings rather than left behind as a stray duplicate.
   if (editingIndex !== null) {
-    logAuditEvent(CARE_SETTINGS[editingIndex].code, "Converted", `Now part of the "${groupName}" Main Care Setting`);
+    logAuditEvent(CARE_SETTINGS[editingIndex].code, "Converted", `Now part of the "${groupName}" Main care setting`);
     CARE_SETTINGS.splice(editingIndex, 1);
     editingIndex = null;
   }
@@ -1393,21 +1472,27 @@ async function saveGroupDraft() {
     logAuditEvent(record.code, "Created", `Part of "${groupName}"`);
   });
   renderTable();
-  toast(`${created.length} Care Settings created under "${groupName}".`);
+  toast(`${created.length} care settings created under "${groupName}".`);
   state.dirty = false;
   closePanel();
 }
 async function activateGroup() {
   state.touched.add("cardState-basic");
   const groupName = document.getElementById("nameField").value.trim();
-  showFieldError("nameField", !groupName ? "Main Care Setting Name is required." : "");
+  showFieldError("nameField", !groupName ? "Main care setting name is required." : "");
   if (!groupName) { document.getElementById("nameField").focus(); return; }
-  if (findMainByLabel(groupName)) { toast(`"${groupName}" already exists. To add to it, open one of its Sub Care Settings and use "Add Sub Care Setting."`); return; }
-  if (isNameTaken(groupName, editingIndex)) { toast(`"${groupName}" is already used by another Care Setting.`); return; }
+  if (findMainByLabel(groupName)) { toast(`"${groupName}" already exists. To add to it, open one of its sub care settings and use "Add sub care setting."`); return; }
+  if (isNameTaken(groupName, editingIndex)) { toast(`"${groupName}" is already used by another care setting.`); return; }
   const blocks = [...document.querySelectorAll("[data-sub-id]")];
+  const invalid = validateSubBlocksInline(blocks);
+  if (invalid) {
+    invalid.block.classList.remove("collapsed");
+    invalid.block.scrollIntoView({ behavior: "smooth", block: "center" });
+    document.getElementById(invalid.field).focus();
+    return;
+  }
   const names = blocks.map(b => document.getElementById(subFieldScope(b.dataset.subId) + "nameField").value.trim());
   const shortNames = blocks.map(b => document.getElementById(subFieldScope(b.dataset.subId) + "shortNameField").value.trim());
-  if (names.some(n => !n)) { toast("Every sub-setting needs a name."); return; }
   const dupError = findBatchDuplicate(names, shortNames);
   if (dupError) { toast(dupError); return; }
   const main = { id: nextMainId(), label: groupName };
@@ -1418,20 +1503,20 @@ async function activateGroup() {
   // Converting an existing standalone Draft into a group: it can't have any dependents yet, so
   // it's simply replaced by its new sub-settings rather than left behind as a stray duplicate.
   if (editingIndex !== null) {
-    logAuditEvent(CARE_SETTINGS[editingIndex].code, "Converted", `Now part of the "${groupName}" Main Care Setting`);
+    logAuditEvent(CARE_SETTINGS[editingIndex].code, "Converted", `Now part of the "${groupName}" Main care setting`);
     CARE_SETTINGS.splice(editingIndex, 1);
     editingIndex = null;
   }
   let activatedCount = 0;
   created.forEach((record, i) => {
-    const issues = computeIssuesFor(subFieldScope(blocks[i].dataset.subId));
+    const issues = computeIssuesFor(subFieldScope(blocks[i].dataset.subId), true);
     if (!issues.basic.length) { record.status = "active"; activatedCount++; }
     CARE_SETTINGS.push(record);
     logAuditEvent(record.code, record.status === "active" ? "Activated" : "Created", `Part of "${groupName}"`);
   });
   renderTable();
   const draftCount = created.length - activatedCount;
-  toast(`${created.length} Care Settings created under "${groupName}" — ${activatedCount} activated${draftCount ? `, ${draftCount} left as Draft (missing info)` : ""}.`);
+  toast(`${created.length} care settings created under "${groupName}" — ${activatedCount} activated${draftCount ? `, ${draftCount} left as Draft (missing info)` : ""}.`);
   state.dirty = false;
   closePanel();
 }
@@ -1502,7 +1587,7 @@ function onSubEditFieldChange(code) {
   const scope = subEditScope(code);
   const heading = document.getElementById(scope + "heading");
   const nameField = document.getElementById(scope + "nameField");
-  if (heading && nameField) heading.textContent = nameField.value.trim() || "Sub Care Setting";
+  if (heading && nameField) heading.textContent = nameField.value.trim() || "Sub care setting";
   updateUnsavedIndicator(code);
   recomputeGlobalDirty();
 }
@@ -1518,11 +1603,11 @@ function subEditCardHtml(cs, idx, expanded) {
   // conditioned on this Sub's status the way the single-record drawer's dependency section is.
   const tbSection = activeTbs.length
     ? `<div style="border:1px solid var(--line);overflow:hidden;"><table class="table"><thead><tr><th>Trackerboard</th><th>Facility</th><th>Status</th></tr></thead><tbody>${activeTbs.map(t => `<tr><td>${t.name}</td><td>${t.facility}</td><td><span class="pill active">Active</span></td></tr>`).join("")}</tbody></table></div>`
-    : emptyStateNote("No associated Trackerboards for this Care Setting.");
+    : emptyStateNote("No associated Trackerboards for this care setting.");
   return `
   <section class="card sub-edit-card${expanded ? "" : " collapsed"}" data-cs-code="${cs.code}">
     <header class="card-head" onclick="toggleReferenceSection(this)">
-      <h2 class="card-title">
+      <h2 class="card-title sub-card-title">
         <span class="card-chevron">${ICONS.chevronDown}</span>
         <span id="${scope}heading">${cs.name}</span>
         <span id="${scope}pill" class="pill ${cs.status}">${cs.status.charAt(0).toUpperCase() + cs.status.slice(1)}</span>
@@ -1538,37 +1623,32 @@ function subEditCardHtml(cs, idx, expanded) {
           <div class="field-error" id="${scope}nameFieldError"></div>
         </div>
         <div class="field">
-          <label for="${scope}shortNameField">Short Name</label>
+          <label for="${scope}shortNameField">Short name <span class="req">*</span></label>
           <input type="text" id="${scope}shortNameField" value="${cs.shortName || ""}" oninput="onSubEditFieldChange('${cs.code}')" aria-describedby="${scope}shortNameFieldError">
           <div class="field-error" id="${scope}shortNameFieldError"></div>
         </div>
       </div>
-      <hr style="border:none;border-top:1px solid #edf0f2;margin:16px 0;">
-      <h3 style="margin:0 0 10px; font-size:var(--text-base); font-weight:600;">Visit Defaults</h3>
-      <div class="form-grid">
+      <div class="form-grid" style="margin-top:9px;">
         <div class="field">
-          <label for="${scope}defaultVisitCategory">Default Visit Category</label>
-          <select id="${scope}defaultVisitCategory" onchange="onSubEditFieldChange('${cs.code}')">${optionsHtml(VISIT_CATEGORIES)}</select>
+          <label for="${scope}defaultVisitCategory">Default visit category <span class="req">*</span></label>
+          <select id="${scope}defaultVisitCategory" onchange="onSubEditFieldChange('${cs.code}')" aria-describedby="${scope}defaultVisitCategoryError">${optionsHtml(VISIT_CATEGORIES)}</select>
+          <div class="field-error" id="${scope}defaultVisitCategoryError"></div>
         </div>
         <div class="field">
           <label for="${scope}defaultDurationValue">Duration</label>
           <div class="inline-pair">
-            <input type="number" id="${scope}defaultDurationValue" min="1" value="${cs.duration.value}" oninput="onSubEditFieldChange('${cs.code}')">
+            <input type="text" id="${scope}defaultDurationValue" value="${cs.duration.value}" inputmode="numeric" oninput="onSubEditFieldChange('${cs.code}')">
             <select id="${scope}defaultDurationUnit" onchange="onSubEditFieldChange('${cs.code}')"><option>minutes</option><option>hours</option></select>
           </div>
         </div>
         <div class="field">
-          <label for="${scope}chiefComplaintForm">Intake Form</label>
+          <label for="${scope}chiefComplaintForm">Forms</label>
           <select id="${scope}chiefComplaintForm" onchange="onSubEditFieldChange('${cs.code}')">${formOptionsHtml(CHIEF_COMPLAINT_FORMS)}</select>
         </div>
       </div>
-      <hr style="border:none;border-top:1px solid #edf0f2;margin:16px 0;">
-      <h3 style="margin:0 0 10px; font-size:var(--text-base); font-weight:600;">Active Trackerboards</h3>
+      <hr style="border:none;border-top:1px solid #edf0f2;margin:8px 0;">
+      <h3 style="margin:0 0 7px; font-size:var(--text-base); font-weight:600;">Active trackerboards</h3>
       ${tbSection}
-      <div class="sub-edit-footer" id="${scope}footer">
-        <button type="button" class="btn tertiary" onclick="cancelSubCard('${cs.code}')">Cancel</button>
-        <button type="button" class="btn primary" onclick="saveSubCard('${cs.code}')">Save</button>
-      </div>
     </div>
   </section>`;
 }
@@ -1599,11 +1679,17 @@ async function commitSubCard(code) {
   const scope = subEditScope(code);
   const name = document.getElementById(scope + "nameField").value.trim();
   const shortName = document.getElementById(scope + "shortNameField").value.trim();
-  const nameErr = !name ? "Care Setting Name is required." : (isNameTaken(name, idx) ? "This name is already in use." : "");
-  const shortErr = (shortName && isNameTaken(shortName, idx)) ? "This Short Name is already in use." : "";
+  const visitCategory = document.getElementById(scope + "defaultVisitCategory").value;
+  const nameErr = !name ? "Care setting name is required." : (isNameTaken(name, idx) ? "This name is already in use." : "");
+  const shortErr = !shortName ? "Short name is required." : (isNameTaken(shortName, idx) ? "This short name is already in use." : "");
+  const visitCategoryErr = (existing.status !== "draft" && !visitCategory) ? "Default visit category is required." : "";
   showFieldError(scope + "nameField", nameErr);
   showFieldError(scope + "shortNameField", shortErr);
-  if (nameErr || shortErr) return false;
+  showFieldError(scope + "defaultVisitCategory", visitCategoryErr);
+  if (nameErr || shortErr || visitCategoryErr) {
+    document.getElementById(nameErr ? scope + "nameField" : shortErr ? scope + "shortNameField" : scope + "defaultVisitCategory").focus();
+    return false;
+  }
 
   const updated = {
     ...existing, name, shortName,
@@ -1623,7 +1709,7 @@ async function commitSubCard(code) {
     const activeTb = csDependencies(existing).trackerboards.active;
     if (activeTb) {
       const proceed = await confirmBox(
-        "Rename this Care Setting?",
+        "Rename this care setting?",
         `${activeTb} active Trackerboard${activeTb === 1 ? "" : "s"} reference "${existing.name}". Renaming it to "${updated.name}" relabels what they point to. Continue?`,
         "Rename", true
       );
@@ -1667,7 +1753,7 @@ function renderMainEditSubs(mainId, opts) {
     const scope = subEditScope(cs.code);
     document.getElementById(scope + "defaultVisitCategory").value = cs.visitCategory;
     document.getElementById(scope + "defaultDurationUnit").value = cs.duration.unit;
-    document.getElementById(scope + "chiefComplaintForm").value = cs.chiefComplaintForm;
+        document.getElementById(scope + "chiefComplaintForm").value = cs.chiefComplaintForm;
     subEditSnapshots[cs.code] = snapshotSubCard(cs);
   });
 }
@@ -1714,10 +1800,18 @@ function openMainEditDrawer(mainId, opts) {
   document.getElementById("panelTitle").textContent = "Edit " + main.label;
   document.getElementById("panel").classList.remove("readonly");
 
-  document.getElementById("groupModeField").style.display = "none";
+  document.getElementById("groupModeField").style.display = "";
+  document.getElementById("subToggleRow").style.display = "flex";
+  const editGroupToggle = document.getElementById("groupModeToggle");
+  editGroupToggle.checked = true;
+  editGroupToggle.disabled = true;
+  document.getElementById("subGroupContainer").style.background = "#EDF2F9";
+  document.getElementById("subSettingsContainer").style.borderTop = "1px solid var(--line)";
+  document.getElementById("subSettingsContainer").style.margin = "10px -10px -10px -10px";
+  const editAddSubBtn = document.getElementById("addSubSettingBtn");
+  editAddSubBtn.style.display = "";
+  editAddSubBtn.onclick = () => addSubSettingBlock();
   document.getElementById("addToMainBanner").style.display = "none";
-  document.getElementById("mainEditAddSubRow").style.display = "";
-  document.getElementById("addSubSettingBtn").style.display = "none";
 
   document.getElementById("nameFieldLabel").textContent = "Name";
   document.getElementById("nameField").placeholder = "e.g. Inpatient";
@@ -1756,10 +1850,10 @@ async function saveMainEdit() {
   const newLabel = document.getElementById("nameField").value.trim();
   const newShort = document.getElementById("shortNameField").value.trim();
   const nameErr = !newLabel ? "Name is required." : (isNameTaken(newLabel, null, mainId) ? "This name is already in use." : "");
-  const shortErr = (newShort && isNameTaken(newShort, null, mainId)) ? "This Short Name is already in use." : "";
+  const shortErr = (newShort && isNameTaken(newShort, null, mainId)) ? "This short name is already in use." : "";
   showFieldError("nameField", nameErr);
   showFieldError("shortNameField", shortErr);
-  if (nameErr || shortErr) { document.getElementById("nameField").focus(); return; }
+  if (nameErr || shortErr) { focusFirstError(); return; }
 
   const codes = [...document.querySelectorAll("#subSettingsContainer [data-cs-code]")].map(c => c.dataset.csCode);
   for (const code of codes) {
@@ -1772,14 +1866,41 @@ async function saveMainEdit() {
     }
   }
 
+  // Any "Add sub setting" clicks during this edit session append a plain blank accordion (same
+  // markup create mode uses) right into #subSettingsContainer, rather than navigating to a
+  // separate drawer — so it has no CARE_SETTINGS record yet ([data-sub-id], not [data-cs-code]).
+  // Validate and create those here, alongside the existing Subs' own commits above.
+  const newBlocks = [...document.querySelectorAll("#subSettingsContainer [data-sub-id]")];
+  const invalidNew = validateSubBlocksInline(newBlocks);
+  if (invalidNew) {
+    invalidNew.block.scrollIntoView({ behavior: "smooth", block: "center" });
+    document.getElementById(invalidNew.field).focus();
+    return;
+  }
+  if (newBlocks.length) {
+    const newNames = newBlocks.map(b => document.getElementById(subFieldScope(b.dataset.subId) + "nameField").value.trim());
+    const newShorts = newBlocks.map(b => document.getElementById(subFieldScope(b.dataset.subId) + "shortNameField").value.trim());
+    const dupError = findBatchDuplicate(newNames, newShorts);
+    if (dupError) { toast(dupError); return; }
+  }
+
   const mainChanged = main.label !== newLabel || (main.shortName || "") !== newShort;
   main.label = newLabel;
   main.shortName = newShort;
   if (mainChanged) logAuditEvent(mainId, "Renamed", newLabel);
 
+  let createdCount = 0;
+  newBlocks.forEach(block => {
+    const record = collectRecordFor(subFieldScope(block.dataset.subId), mainId);
+    CARE_SETTINGS.push(record);
+    logAuditEvent(record.code, "Created", `Part of "${newLabel}"`);
+    createdCount++;
+  });
+  if (createdCount) renderMainEditSubs(mainId);
+
   recomputeGlobalDirty();
   renderTable();
-  toast(`"${newLabel}" saved.`);
+  toast(createdCount ? `"${newLabel}" saved — ${createdCount} new sub care setting${createdCount === 1 ? "" : "s"} added.` : `"${newLabel}" saved.`);
 }
 
 // Bound to #panelBody — the Care Setting drawer's own body. Deliberately NOT document.body:
@@ -1789,7 +1910,7 @@ async function saveMainEdit() {
 document.getElementById("panelBody").addEventListener("input", markDirtyAndTrack);
 document.getElementById("panelBody").addEventListener("change", markDirtyAndTrack);
 
-function computeIssues() {
+function computeIssues(forActivation) {
   const name = document.getElementById("nameField").value.trim();
   const shortName = document.getElementById("shortNameField").value.trim();
   const basic = [];
@@ -1798,14 +1919,19 @@ function computeIssues() {
   // (reused rather than duplicated — see openMainEditDrawer). Without excluding the Main's own
   // id here, its current label would always collide with itself in isNameTaken().
   const excludeMain = state.mode === "mainEdit" ? editingMainId : null;
-  if (!name) basic.push("Care Setting Name is required.");
+  if (!name) basic.push("Care setting name is required.");
   else if (isNameTaken(name, editingIndex, excludeMain)) basic.push("This name is already in use.");
-  // Short Name is optional, but once given, it must be unique — Trackerboard configuration
-  // keys off Short Name internally, so a collision here isn't just cosmetic (Phase 1). Both
-  // checks now run against the shared Name/Short Name/Main-label namespace (Phase 2, 2.5).
-  if (shortName && isNameTaken(shortName, editingIndex, excludeMain)) {
-    basic.push("This Short Name is already in use.");
+  // Short Name is mandatory for both Save draft and Activate — once given, it must also be
+  // unique, since Trackerboard configuration keys off Short Name internally.
+  if (!shortName) basic.push("Short name is required.");
+  else if (isNameTaken(shortName, editingIndex, excludeMain)) {
+    basic.push("This short name is already in use.");
     shortNameDupe = true;
+  }
+  // Default visit category is only mandatory on Activate — a Draft can be saved without it.
+  if (forActivation) {
+    const visitCategoryEl = document.getElementById("defaultVisitCategory");
+    if (visitCategoryEl && !visitCategoryEl.value) basic.push("Default visit category is required.");
   }
   return { basic, shortNameDupe };
 }
@@ -1825,12 +1951,25 @@ function showFieldError(fieldId, message) {
   field.classList.toggle("error", !!message);
   errEl.textContent = message || "";
 }
-function renderValidationState() {
-  const issues = computeIssues();
-  setSectionState("cardState-basic", state.touched.has("cardState-basic") ? issues.basic.length : 0, state.touched.has("cardState-basic"));
+// Focuses the first field currently showing an inline error (searched within scope, default the
+// whole drawer body) — used after a Save/Activate validation fails, so focus always lands on
+// whichever field is actually wrong rather than a fixed field regardless of which one failed.
+function focusFirstError(scopeEl) {
+  const container = scopeEl || document.getElementById("panelBody");
+  const errField = container.querySelector(".field.error");
+  if (!errField) return;
+  const control = errField.querySelector("input,select,textarea");
+  if (control) control.focus();
+}
+function renderValidationState(forActivation) {
+  const issues = computeIssues(forActivation);
+  const touched = state.touched.has("cardState-basic");
+  setSectionState("cardState-basic", touched ? issues.basic.length : 0, touched);
   setSectionState("cardState-clinical", 0, state.touched.has("cardState-clinical"));
-  showFieldError("nameField", state.touched.has("cardState-basic") && !document.getElementById("nameField").value.trim() ? "Care Setting Name is required." : "");
-  showFieldError("shortNameField", state.touched.has("cardState-basic") && issues.shortNameDupe ? "This Short Name is already in use." : "");
+  showFieldError("nameField", touched && !document.getElementById("nameField").value.trim() ? "Care setting name is required." : "");
+  showFieldError("shortNameField", touched && !document.getElementById("shortNameField").value.trim() ? "Short name is required." : (touched && issues.shortNameDupe ? "This short name is already in use." : ""));
+  const visitCategoryEl = document.getElementById("defaultVisitCategory");
+  if (visitCategoryEl) showFieldError("defaultVisitCategory", touched && forActivation && !visitCategoryEl.value ? "Default visit category is required." : "");
   state.blocking = issues.basic.length;
   renderStatusBadge();
   renderFooter();
@@ -2022,14 +2161,14 @@ function renderFooter() {
     // immediately from each Sub's own menu instead, same as they always have.
     footer.innerHTML = `<div style="display:flex; gap:8px; margin-left:auto;">
       <button class="btn tertiary" onclick="requestClose()">Cancel</button>
-      <button class="btn primary" onclick="saveMainEdit()">Save Changes</button>
+      <button class="btn primary" onclick="saveMainEdit()">Save changes</button>
     </div>`;
     return;
   }
   if (isGroupCreateMode()) {
     const subCount = document.querySelectorAll("[data-sub-id]").length;
     const cancelBtn = `<button class="btn tertiary" onclick="requestClose()">Cancel</button>`;
-    const draftBtn = `<button class="btn" ${subCount < 1 ? "disabled" : ""} onclick="saveGroupDraft()">Save Draft</button>`;
+    const draftBtn = `<button class="btn secondary" ${subCount < 1 ? "disabled" : ""} onclick="saveGroupDraft()">Save draft</button>`;
     const activateBtn = `<button class="btn primary" ${subCount < 1 ? "disabled" : ""} onclick="activateGroup()">Activate</button>`;
     footer.innerHTML = `<div style="display:flex; gap:8px; margin-left:auto;">${cancelBtn}${draftBtn}${activateBtn}</div>`;
     return;
@@ -2038,9 +2177,9 @@ function renderFooter() {
 
   let buttons = "";
   if (state.status === "draft") {
-    buttons = `${cancelBtn}<button class="btn" onclick="saveDraft()">Save Draft</button><button class="btn primary" ${state.blocking ? "disabled" : ""} onclick="activateCareSetting()">Activate</button>`;
+    buttons = `${cancelBtn}<button class="btn secondary" onclick="saveDraft()">Save draft</button><button class="btn primary" onclick="activateCareSetting()">Activate</button>`;
   } else if (state.status === "active") {
-    buttons = `${cancelBtn}<button class="btn" onclick="saveDraft()">Save Changes</button><button class="btn danger" onclick="inactivateCareSetting()">Inactivate</button>`;
+    buttons = `${cancelBtn}<button class="btn" onclick="saveDraft()">Save changes</button><button class="btn danger" onclick="inactivateCareSetting()">Inactivate</button>`;
   } else if (state.status === "inactive") {
     buttons = `${cancelBtn}<button class="btn primary" onclick="activateCareSetting()">Reactivate</button>`;
   }
@@ -2085,12 +2224,12 @@ function renderPanelCodeSub(record) {
 
 async function saveDraft() {
   state.touched.add("cardState-basic");
-  const issues = renderValidationState();
-  // Name is required AND must be unique on every save, not only on Activate — otherwise two
-  // drafts can sit in the table under the same name indefinitely with no signal until someone
-  // tries to activate one of them.
+  const issues = renderValidationState(false);
+  // Name AND Short name are required AND must be unique on every save, not only on Activate —
+  // otherwise two drafts can sit in the table under the same name indefinitely with no signal
+  // until someone tries to activate one of them.
   if (issues.basic.length) {
-    document.getElementById("nameField").focus();
+    focusFirstError();
     return;
   }
   const isFirstSave = editingIndex === null;
@@ -2101,7 +2240,7 @@ async function saveDraft() {
       const activeTb = csDependencies(existing).trackerboards.active;
       if (activeTb) {
         const proceed = await confirmBox(
-          "Rename this Care Setting?",
+          "Rename this care setting?",
           `${activeTb} active Trackerboard${activeTb === 1 ? "" : "s"} reference "${existing.name}". Renaming it to "${newName}" relabels what they point to. Continue?`,
           "Rename", true
         );
@@ -2117,8 +2256,8 @@ async function saveDraft() {
 
 function activateCareSetting() {
   state.touched.add("cardState-basic");
-  const issues = renderValidationState();
-  if (issues.basic.length) return;
+  const issues = renderValidationState(true);
+  if (issues.basic.length) { focusFirstError(); return; }
   const wasInactive = state.status === "inactive";
   state.status = "active";
   const record = persist();
@@ -2127,20 +2266,20 @@ function activateCareSetting() {
   renderStatusBadge();
   updateStubSectionVisibility();
   renderFooter();
-  toast(wasInactive ? "Care Setting reactivated." : "Care Setting activated.");
+  toast(wasInactive ? "Care setting reactivated." : "Care setting activated.");
 }
 async function inactivateCareSetting() {
   const existing = editingIndex !== null ? CARE_SETTINGS[editingIndex] : null;
-  const draftRecord = { name: document.getElementById("nameField").value.trim() || "this Care Setting", dependencies: existing ? existing.dependencies : emptyDep() };
+  const draftRecord = { name: document.getElementById("nameField").value.trim() || "this care setting", dependencies: existing ? existing.dependencies : emptyDep() };
   const msg = lifecycleWarning(draftRecord, "deactivate");
-  if (!(await confirmBox("Deactivate this Care Setting?", msg, "Deactivate", true))) return;
+  if (!(await confirmBox("Deactivate this care setting?", msg, "Deactivate", true))) return;
   state.status = "inactive";
   const record = persist();
   logAuditEvent(record.code, "Deactivated");
   renderStatusBadge();
   updateStubSectionVisibility();
   renderFooter();
-  toast("Care Setting inactivated.");
+  toast("Care setting inactivated.");
 }
 
 async function requestClose() { if (state.dirty && !(await confirmBox("Discard unsaved changes?", "Your changes won't be saved.", "Discard and close", true))) return; closePanel(); }
@@ -2168,7 +2307,7 @@ async function openAddSubToMain(mainId) {
   openPanel(null, undefined, { addToMainId: mainId });
 }
 async function goBackFromAddSub() {
-  if (state.dirty && !(await confirmBox("Discard unsaved changes?", "This new Sub Care Setting hasn't been saved yet.", "Discard and go back", true))) return;
+  if (state.dirty && !(await confirmBox("Discard unsaved changes?", "This new sub care setting hasn't been saved yet.", "Discard and go back", true))) return;
   if (addSubOrigin && addSubOrigin.mainId) {
     openMainEditDrawer(addSubOrigin.mainId);
   } else {
@@ -2190,7 +2329,7 @@ function openPanel(cs, idx, opts) {
   state.touched = cs ? new Set(["cardState-basic", "cardState-clinical"]) : new Set();
   state.blocking = 0;
 
-  document.getElementById("panelTitle").textContent = opts.readonly ? "Preview: " + cs.name : addToMainId ? "Add Sub Care Setting" : (cs ? "Edit Care Setting" : "Create New Care Setting");
+  document.getElementById("panelTitle").textContent = opts.readonly ? "Preview: " + cs.name : addToMainId ? "Add sub care setting" : (cs ? "Edit care setting" : "Create new care setting");
   document.getElementById("panel").classList.toggle("readonly", state.readonly);
 
   // Grouping is locked once a Care Setting is no longer a Draft — no retrofit past that point.
@@ -2202,11 +2341,14 @@ function openPanel(cs, idx, opts) {
   // never reaches this function at all as of Phase 3 — see the comment a few lines down.)
   const groupModeField = document.getElementById("groupModeField");
   const groupToggle = document.getElementById("groupModeToggle");
+  document.getElementById("subToggleRow").style.display = "";
+  document.getElementById("subGroupContainer").style.background = "#fff";
+  document.getElementById("subSettingsContainer").style.margin = "10px -10px -10px -10px";
   groupToggle.checked = false;
   groupToggle.disabled = !!cs && (!!cs.mainId || cs.status !== "draft");
   document.getElementById("subSettingsContainer").innerHTML = "";
   document.getElementById("addSubSettingBtn").style.display = "none";
-  document.getElementById("mainEditAddSubRow").style.display = "none";
+  document.getElementById("addSubSettingBtn").onclick = () => addSubSettingBlock();
   document.getElementById("nameFieldLabel").textContent = "Name";
   document.getElementById("nameField").placeholder = "e.g. Infusion Suite";
   document.getElementById("sec-clinical").style.display = "";
@@ -2245,8 +2387,8 @@ function openPanel(cs, idx, opts) {
   if (cs && cs.visitCategory) document.getElementById("defaultVisitCategory").value = cs.visitCategory;
   if (cs && cs.chiefComplaintForm) document.getElementById("chiefComplaintForm").value = cs.chiefComplaintForm;
   renderChiefComplaintFormLink();
-  document.getElementById("defaultDurationValue").value = (cs && cs.duration) ? cs.duration.value : 30;
-  document.getElementById("defaultDurationUnit").value = (cs && cs.duration) ? cs.duration.unit : "minutes";
+  document.getElementById("defaultDurationValue").value = (cs && cs.duration) ? cs.duration.value : "";
+  document.getElementById("defaultDurationUnit").value = (cs && cs.duration) ? cs.duration.unit : "";
 
   renderDependencies(cs);
   updateStubSectionVisibility();
@@ -2267,7 +2409,6 @@ document.getElementById("auditModalBackdrop").addEventListener("click", e => { i
 
 initDashboardFilters();
 renderTable();
-initDashboardInfiniteScroll();
 
 </script>
 </body>
