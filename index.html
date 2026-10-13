@@ -173,6 +173,10 @@ button,input,select,textarea{font:inherit;color:inherit}button{border:0}button:f
 
 /* Read-only preview mode */
 .panel.readonly .field input,.panel.readonly .field select,.panel.readonly .field textarea{pointer-events:none;background:#f2f4f6;color:#808080}
+.panel.readonly .maternity-row input{pointer-events:none}
+.maternity-check{display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.maternity-check input[type="checkbox"]{flex:0 0 auto;width:15px;height:15px;margin:0}
+.maternity-tag{margin-left:8px;padding:0 8px;font-size:var(--text-xs);font-weight:400;color:#808080;border:1px solid #d9dee2;border-radius:999px;white-space:nowrap}
 .panel.readonly .add-link,.panel.readonly .danger-icon,.panel.readonly .picker{display:none}
 
 /* Sortable dashboard column headers — ported from Trackerboard */
@@ -363,6 +367,9 @@ strong{font-weight:600}
           
         </div>
       </div>
+      <div style="margin-top:9px;">
+        <div class="toggle-row maternity-row"><label class="maternity-check" onclick="event.stopPropagation()"><input type="checkbox" id="isMaternityToggle"><span class="toggle-row-label">Mark as Maternity care setting</span></label><span class="info" onclick="toggleTip(this, event)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg><span class="tip">Identifies a care setting where mothers give birth and newborns are cared for, with mother-baby workflows on its Trackerboards.</span></span></div>
+      </div>
     </div>
 
     <div class="flat-section" id="sec-dependencies">
@@ -520,7 +527,7 @@ const CARE_SETTINGS = [
       { name: "ICU Overflow", facility: "North Wing", status: "draft" }
     ]), mainId: "MAIN-0001" },
 
-  { name: "Maternity", code: "CS-000006", shortName: "Maternity", status: "inactive", updated: "2026-07-25", by: "Amanda Carter",
+  { name: "Maternity", code: "CS-000006", shortName: "Maternity", isMaternity: true, status: "inactive", updated: "2026-07-25", by: "Amanda Carter",
     visitCategory: "New Patient", duration: { value: 4, unit: "hours" }, chiefComplaintForm: "form-standard-complaint",
     dependencies: dep([{ name: "Maternity Rounds", facility: "Main Campus", status: "active" }]), mainId: "MAIN-0001" },
 
@@ -580,6 +587,22 @@ function hasAnyDeps(d) { return !!(d.trackerboards.total); }
 // One shared source of confirm-dialog copy — used by every trigger point (dashboard row menu,
 // drawer footer, quick actions) so the tool never tells the user two different things about the
 // same risk depending on which button they clicked.
+// Unchecking Maternity care setting changes every Trackerboard that uses this care setting: the
+// Add child action is taken off them and any baby movement settings on their statuses are
+// cleared. With active Trackerboards that needs a confirmation (same soft-guard style as a
+// rename); with none, nothing downstream exists to change, so no prompt.
+async function confirmMaternityOff(cs) {
+  const n = csDependencies(cs).trackerboards.active;
+  if (!n) return true;
+  return confirmBox(
+    "Turn off Maternity care setting?",
+    `"${cs.name}" is used by ${n} active Trackerboard${n === 1 ? "" : "s"}. Turning this off removes the Add child action from ${n === 1 ? "it" : "them"} and clears the baby movement settings on ${n === 1 ? "its" : "their"} statuses. Continue?`,
+    "Turn off", true
+  );
+}
+function maternityAuditDetail(wasOn, isOn) {
+  return "Maternity care setting: " + (wasOn ? "on" : "off") + " to " + (isOn ? "on" : "off");
+}
 function lifecycleWarning(cs, action) {
   const d = csDependencies(cs);
   const blocking = hasBlockingDeps(d);
@@ -939,7 +962,7 @@ function renderTable() {
       if (isChild) tr.className = "group-child-row";
       tr.onclick = () => editCareSetting(idx);
       tr.innerHTML = `
-        <td><span class="cell-title">${cs.name}</span></td>
+        <td><span class="cell-title">${cs.name}</span>${cs.isMaternity ? '<span class="maternity-tag">Maternity</span>' : ""}</td>
         <td>${cs.shortName || "—"}</td>
         <td>${cs.visitCategory || "—"}</td>
         <td>${cs.duration ? (cs.duration.value + (cs.duration.unit ? " " + cs.duration.unit : "")) : "—"}</td>
@@ -1235,6 +1258,7 @@ async function handleGroupModeToggle() {
     document.getElementById("defaultDurationValue").value = "";
     document.getElementById("defaultDurationUnit").value = "minutes";
     document.getElementById("chiefComplaintForm").value = "";
+    document.getElementById("isMaternityToggle").checked = false;
   } else if (!turningOn && state.mode === "mainEdit") {
     // Symmetric with turning ON: same guard as quickDelete (status === "draft" && no deps), just
     // applied to every Sub in the group instead of one record. If every Sub still qualifies, nothing
@@ -1292,6 +1316,7 @@ function convertMainToStandalone(mainId) {
   document.getElementById("defaultDurationValue").value = "";
   document.getElementById("defaultDurationUnit").value = "minutes";
   document.getElementById("chiefComplaintForm").value = "";
+  document.getElementById("isMaternityToggle").checked = false;
   renderChiefComplaintFormLink();
   state.dirty = true;
   renderTable();
@@ -1360,6 +1385,9 @@ function subSettingBlockHtml(subId) {
           <select id="${scope}chiefComplaintForm">${formOptionsHtml(CHIEF_COMPLAINT_FORMS)}</select>
         </div>
       </div>
+      <div style="margin-top:9px;">
+        <div class="toggle-row maternity-row"><label class="maternity-check" onclick="event.stopPropagation()"><input type="checkbox" id="${scope}isMaternity"><span class="toggle-row-label">Mark as Maternity care setting</span></label><span class="info" onclick="toggleTip(this, event)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg><span class="tip">Identifies a care setting where mothers give birth and newborns are cared for, with mother-baby workflows on its Trackerboards.</span></span></div>
+      </div>
     </div>
   </section>`;
 }
@@ -1414,6 +1442,7 @@ function collectRecordFor(fieldScope, mainId) {
     visitCategory: document.getElementById(fieldScope + "defaultVisitCategory").value,
     duration: { value: document.getElementById(fieldScope + "defaultDurationValue").value, unit: document.getElementById(fieldScope + "defaultDurationUnit").value },
     chiefComplaintForm: document.getElementById(fieldScope + "chiefComplaintForm").value,
+    isMaternity: document.getElementById(fieldScope + "isMaternity").checked,
     dependencies: emptyDep(),
     mainId: mainId || null
   };
@@ -1606,7 +1635,8 @@ async function activateGroup() {
 function subEditScope(code) { return "subedit_" + String(code).replace(/[^A-Za-z0-9]/g, "") + "_"; }
 function snapshotSubCard(cs) {
   return { name: cs.name, shortName: cs.shortName || "", visitCategory: cs.visitCategory,
-    duration: { value: String(cs.duration.value), unit: cs.duration.unit }, chiefComplaintForm: cs.chiefComplaintForm };
+    duration: { value: String(cs.duration.value), unit: cs.duration.unit }, chiefComplaintForm: cs.chiefComplaintForm,
+    isMaternity: !!cs.isMaternity };
 }
 function currentSubCardValues(code) {
   const scope = subEditScope(code);
@@ -1615,7 +1645,8 @@ function currentSubCardValues(code) {
     shortName: document.getElementById(scope + "shortNameField").value.trim(),
     visitCategory: document.getElementById(scope + "defaultVisitCategory").value,
     duration: { value: document.getElementById(scope + "defaultDurationValue").value, unit: document.getElementById(scope + "defaultDurationUnit").value },
-    chiefComplaintForm: document.getElementById(scope + "chiefComplaintForm").value
+    chiefComplaintForm: document.getElementById(scope + "chiefComplaintForm").value,
+    isMaternity: document.getElementById(scope + "isMaternity").checked
   };
 }
 // code -> last-committed values for every rendered Sub card, set on every (re)build and updated
@@ -1628,7 +1659,7 @@ function subCardIsDirty(code) {
   const cur = currentSubCardValues(code);
   return cur.name !== snap.name || cur.shortName !== snap.shortName || cur.visitCategory !== snap.visitCategory
     || String(cur.duration.value) !== String(snap.duration.value) || cur.duration.unit !== snap.duration.unit
-    || cur.chiefComplaintForm !== snap.chiefComplaintForm;
+    || cur.chiefComplaintForm !== snap.chiefComplaintForm || cur.isMaternity !== snap.isMaternity;
 }
 function updateUnsavedIndicator(code) {
   const el = document.getElementById(subEditScope(code) + "unsavedTag");
@@ -1711,6 +1742,9 @@ function subEditCardHtml(cs, idx, expanded) {
           <select id="${scope}chiefComplaintForm" onchange="onSubEditFieldChange('${cs.code}')">${formOptionsHtml(CHIEF_COMPLAINT_FORMS)}</select>
         </div>
       </div>
+      <div style="margin-top:9px;">
+        <div class="toggle-row maternity-row"><label class="maternity-check" onclick="event.stopPropagation()"><input type="checkbox" id="${scope}isMaternity" onchange="onSubEditFieldChange('${cs.code}')"${cs.isMaternity ? " checked" : ""}><span class="toggle-row-label">Mark as Maternity care setting</span></label><span class="info" onclick="toggleTip(this, event)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16" style="vertical-align:-0.125em;"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/></svg><span class="tip">Identifies a care setting where mothers give birth and newborns are cared for, with mother-baby workflows on its Trackerboards.</span></span></div>
+      </div>
       <hr style="border:none;border-top:1px solid #edf0f2;margin:8px 0;">
       <h3 style="margin:0 0 7px; font-size:var(--text-base); font-weight:600;">Active trackerboards</h3>
       ${tbSection}
@@ -1729,6 +1763,7 @@ function cancelSubCard(code) {
   document.getElementById(scope + "defaultDurationValue").value = snap.duration.value;
   document.getElementById(scope + "defaultDurationUnit").value = snap.duration.unit;
   document.getElementById(scope + "chiefComplaintForm").value = snap.chiefComplaintForm;
+  document.getElementById(scope + "isMaternity").checked = snap.isMaternity;
   showFieldError(scope + "nameField", "");
   showFieldError(scope + "shortNameField", "");
   onSubEditFieldChange(code);
@@ -1760,12 +1795,16 @@ async function commitSubCard(code) {
     ...existing, name, shortName,
     visitCategory: document.getElementById(scope + "defaultVisitCategory").value,
     duration: { value: document.getElementById(scope + "defaultDurationValue").value, unit: document.getElementById(scope + "defaultDurationUnit").value },
-    chiefComplaintForm: document.getElementById(scope + "chiefComplaintForm").value
+    chiefComplaintForm: document.getElementById(scope + "chiefComplaintForm").value,
+    isMaternity: document.getElementById(scope + "isMaternity").checked
   };
   const changed = updated.name !== existing.name || updated.shortName !== existing.shortName
     || updated.visitCategory !== existing.visitCategory || updated.chiefComplaintForm !== existing.chiefComplaintForm
-    || String(updated.duration.value) !== String(existing.duration.value) || updated.duration.unit !== existing.duration.unit;
+    || String(updated.duration.value) !== String(existing.duration.value) || updated.duration.unit !== existing.duration.unit
+    || updated.isMaternity !== !!existing.isMaternity;
   if (!changed) return true;
+  const maternityChanged = updated.isMaternity !== !!existing.isMaternity;
+  if (maternityChanged && !updated.isMaternity && !(await confirmMaternityOff(existing))) return false;
 
   // Same rename-vs-active-Trackerboard confirmation the single-record drawer already has — now
   // restored for per-card Save, and reused (sequentially, one dialog per affected card) by
@@ -1785,7 +1824,7 @@ async function commitSubCard(code) {
   updated.updated = TODAY_STR;
   updated.by = CURRENT_USER;
   CARE_SETTINGS[idx] = updated;
-  logAuditEvent(updated.code, updated.name !== existing.name ? "Renamed" : "Updated");
+  logAuditEvent(updated.code, updated.name !== existing.name ? "Renamed" : "Updated", maternityChanged ? maternityAuditDetail(!!existing.isMaternity, updated.isMaternity) : "");
   subEditSnapshots[code] = snapshotSubCard(updated);
   const headingEl = document.getElementById(scope + "heading");
   if (headingEl) headingEl.textContent = updated.name;
@@ -2284,6 +2323,7 @@ function collectRecord() {
     visitCategory: document.getElementById("defaultVisitCategory").value,
     duration: { value: document.getElementById("defaultDurationValue").value, unit: document.getElementById("defaultDurationUnit").value },
     chiefComplaintForm: document.getElementById("chiefComplaintForm").value,
+    isMaternity: document.getElementById("isMaternityToggle").checked,
     dependencies: existing ? existing.dependencies : emptyDep(),
     // Phase 2: a brand-new record opened via "Add Sub Care Setting" (addToMainId set) always
     // joins that specific, already-existing Main by reference — it never inherits a Main any
@@ -2332,9 +2372,14 @@ async function saveDraft() {
       }
     }
   }
+  const prior = !isFirstSave ? CARE_SETTINGS[editingIndex] : null;
+  const wasMaternity = !!(prior && prior.isMaternity);
+  const nowMaternity = document.getElementById("isMaternityToggle").checked;
+  if (wasMaternity && !nowMaternity && !(await confirmMaternityOff(prior))) return;
   const record = persist();
   state.dirty = false;
   if (isFirstSave) logAuditEvent(record.code, "Created");
+  else if (wasMaternity !== nowMaternity) logAuditEvent(record.code, "Updated", maternityAuditDetail(wasMaternity, nowMaternity));
   toast(state.status === "draft" ? "Draft saved." : "Changes saved.");
 }
 
@@ -2471,6 +2516,7 @@ function openPanel(cs, idx, opts) {
   renderChiefComplaintFormLink();
   document.getElementById("defaultDurationValue").value = (cs && cs.duration) ? cs.duration.value : "";
   document.getElementById("defaultDurationUnit").value = (cs && cs.duration) ? cs.duration.unit : "minutes";
+  document.getElementById("isMaternityToggle").checked = !!(cs && cs.isMaternity);
 
   renderDependencies(cs);
   updateStubSectionVisibility();
