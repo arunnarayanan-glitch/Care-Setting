@@ -495,11 +495,13 @@ function dep(list) {
 //       Maternity      inactive  — 1 active Trackerboard: proves the accordion's Trackerboard
 //                                  table shows on an inactive Sub too (decision: shown whenever
 //                                  any Trackerboard is active, regardless of the Sub's own status).
-//       Hospitalization draft    — 0 Trackerboards (a Draft can never have one — see
-//                                  updateStubSectionVisibility): exercises the accordion's empty
-//                                  state on an otherwise-editable card.
+//       Hospitalization active   — 0 Trackerboards: exercises the accordion's empty state on an
+//                                  otherwise-editable card. (Was Draft before the all-or-nothing
+//                                  rule: an activated group never holds a Draft Sub.)
 //       Neonatal       active    — 0 Trackerboards: exercises the empty state on an Active Sub
 //                                  with nothing built on it yet (a valid, non-blocking state).
+//   - 1 more Main ("Outpatient" / OP) that has never been activated: three Draft Subs, one of them
+//     (Infusion) missing its Default Visit Category — the group to try Activate on.
 //   Maternity carries the latest "updated" date of the four, so it's also what proves out Main's
 //   derived Updated On/By (decision: mirrors whichever child was touched most recently).
 const CARE_SETTINGS = [
@@ -531,13 +533,28 @@ const CARE_SETTINGS = [
     visitCategory: "New Patient", duration: { value: 4, unit: "hours" }, chiefComplaintForm: "form-standard-complaint",
     dependencies: dep([{ name: "Maternity Rounds", facility: "Main Campus", status: "active" }]), mainId: "MAIN-0001" },
 
-  { name: "Hospitalization", code: "CS-000007", shortName: "Hosp", status: "draft", updated: "2026-07-10", by: "James Weaver",
+  { name: "Hospitalization", code: "CS-000007", shortName: "Hosp", status: "active", updated: "2026-07-10", by: "James Weaver",
     visitCategory: "Follow-up", duration: { value: 4, unit: "hours" }, chiefComplaintForm: "form-standard-complaint",
     dependencies: dep([]), mainId: "MAIN-0001" },
 
   { name: "Neonatal", code: "CS-000008", shortName: "Neo", status: "active", updated: "2026-06-05", by: "Robert Hayes",
     visitCategory: "New Patient", duration: { value: 1, unit: "hours" }, chiefComplaintForm: "form-none",
-    dependencies: dep([]), mainId: "MAIN-0001" }
+    dependencies: dep([]), mainId: "MAIN-0001" },
+
+  // A group that has never been activated: every Sub is Draft. Mirrors the refinement example —
+  // two complete Subs and one (Infusion) still missing its Default Visit Category, so Activate on
+  // this group must fail as a whole. Drafts never have dependents, hence the empty dependencies.
+  { name: "Day Surgery", code: "CS-000009", shortName: "DaySx", status: "draft", updated: "2026-10-20", by: "James Weaver",
+    visitCategory: "Procedure", duration: { value: 4, unit: "hours" }, chiefComplaintForm: "form-none",
+    dependencies: dep([]), mainId: "MAIN-0002" },
+
+  { name: "Dialysis", code: "CS-000010", shortName: "Dial", status: "draft", updated: "2026-10-20", by: "James Weaver",
+    visitCategory: "Follow-up", duration: { value: 3, unit: "hours" }, chiefComplaintForm: "form-none",
+    dependencies: dep([]), mainId: "MAIN-0002" },
+
+  { name: "Infusion", code: "CS-000011", shortName: "Inf", status: "draft", updated: "2026-10-20", by: "James Weaver",
+    visitCategory: "", duration: { value: "", unit: "minutes" }, chiefComplaintForm: "",
+    dependencies: dep([]), mainId: "MAIN-0002" }
 ];
 
 // Phase 2 (decision 2.1, extended): a Main Care Setting is a real entity now, not a copied
@@ -550,9 +567,10 @@ const CARE_SETTINGS = [
 // mainRowMeta() — but that's derived from its children on read, not a field stored here. Main
 // itself still carries nothing beyond identity and label.
 let MAIN_GROUPS = [
-  { id: "MAIN-0001", label: "Inpatient", shortName: "IP" }
+  { id: "MAIN-0001", label: "Inpatient", shortName: "IP" },
+  { id: "MAIN-0002", label: "Outpatient", shortName: "OP" }
 ];
-let mainSeq = 1;
+let mainSeq = 2;
 function nextMainId() { mainSeq += 1; return "MAIN-" + String(mainSeq).padStart(4, "0"); }
 function mainLabel(mainId) {
   const m = MAIN_GROUPS.find(g => g.id === mainId);
@@ -759,6 +777,8 @@ function mainRowMeta(children) {
 // Phase 3: Main's own row menu — deliberately just Edit and View activity log. Main carries no
 // status, so it has nothing to deactivate/reactivate/delete; those stay per-Sub actions
 // (see rowActionsHtml), each Sub owning its own risk, with no cascade from Main.
+// Exception (refinement decision): the Main edit drawer offers an all-or-nothing Activate while the
+// group is a Draft group (every Sub Draft) — see activateMainEdit(). Not offered once activated.
 function mainRowActionsHtml(mainId) {
   const items = [
     `<button type="button" onclick="event.stopPropagation(); closeRowMenus(); openMainEditDrawer('${mainId}')">Edit</button>`,
@@ -1056,6 +1076,7 @@ function afterCareSettingMutation(mainId, code) {
   renderTable();
   if (!(mainId && state.mode === "mainEdit" && editingMainId === mainId)) return;
   refreshSubCardChrome(mainId, code);
+  renderFooter();
 }
 async function quickInactivate(idx) {
   const cs = CARE_SETTINGS[idx];
@@ -1370,7 +1391,7 @@ function subSettingBlockHtml(subId) {
       <div class="form-grid cols-3" style="margin-top:9px;">
         <div class="field">
           <label for="${scope}defaultVisitCategory">Default visit category <span class="req">*</span></label>
-          <select id="${scope}defaultVisitCategory" aria-describedby="${scope}defaultVisitCategoryError">${optionsHtml(VISIT_CATEGORIES)}</select>
+          <select id="${scope}defaultVisitCategory" onchange="onSubVisitCategoryChange('${subId}')" aria-describedby="${scope}defaultVisitCategoryError">${optionsHtml(VISIT_CATEGORIES)}</select>
           <div class="field-error" id="${scope}defaultVisitCategoryError"></div>
         </div>
         <div class="field">
@@ -1425,8 +1446,14 @@ function refreshSubSettingHeadings() {
     }
   });
 }
+function onSubVisitCategoryChange(subId) {
+  const scope = subFieldScope(subId);
+  if (document.getElementById(scope + "defaultVisitCategory").value) showFieldError(scope + "defaultVisitCategory", "");
+}
 function onSubNameInput(subId) {
   const scope = subFieldScope(subId);
+  if (document.getElementById(scope + "nameField").value.trim()) showFieldError(scope + "nameField", "");
+  if (document.getElementById(scope + "shortNameField").value.trim()) showFieldError(scope + "shortNameField", "");
   refreshSubSettingHeadings();
   touchSection(document.getElementById(scope + "cardState-basic"));
 }
@@ -1565,6 +1592,35 @@ async function saveGroupDraft() {
   state.dirty = false;
   closePanel();
 }
+// ALL-OR-NOTHING ACTIVATION (agreed in refinement). Activating a group validates the Main and
+// EVERY Sub first. If any one of them fails, the whole activation fails: no record is created,
+// no status changes, and the drawer stays open with an inline error on every failing field.
+// Validation passes below only ever write inline error text — never a record, status or log
+// entry — so a failed Activate leaves the data exactly as it was.
+//
+// Pass: Default Visit Category is mandatory to Activate (not to Save draft), for every Sub.
+function validateSubBlocksVisitCategory(blocks) {
+  let firstInvalid = null;
+  blocks.forEach(block => {
+    const scope = subFieldScope(block.dataset.subId);
+    const err = document.getElementById(scope + "defaultVisitCategory").value ? "" : "Default visit category is required.";
+    showFieldError(scope + "defaultVisitCategory", err);
+    if (err && !firstInvalid) firstInvalid = { block, field: scope + "defaultVisitCategory" };
+  });
+  return firstInvalid;
+}
+// Of several {block, field} failures, the one that appears first on screen.
+function earliestInvalid(blocks, ...candidates) {
+  const found = candidates.filter(Boolean);
+  if (!found.length) return null;
+  return found.reduce((a, b) => blocks.indexOf(b.block) < blocks.indexOf(a.block) ? b : a);
+}
+// Opens every card that is showing an error (not only the first) and moves focus to the first one.
+function revealInvalidBlocks(blocks, first) {
+  blocks.forEach(block => { if (block.querySelector(".field.error")) block.classList.remove("collapsed"); });
+  first.block.scrollIntoView({ behavior: "smooth", block: "center" });
+  document.getElementById(first.field).focus();
+}
 async function activateGroup() {
   state.touched.add("cardState-basic");
   const groupName = document.getElementById("nameField").value.trim();
@@ -1573,26 +1629,28 @@ async function activateGroup() {
     : isNameTaken(groupName, editingIndex) ? `"${groupName}" is already used by another care setting.`
     : "";
   showFieldError("nameField", nameErr);
-  if (nameErr) { document.getElementById("nameField").focus(); return; }
   const blocks = [...document.querySelectorAll("[data-sub-id]")];
-  const invalid = validateSubBlocksInline(blocks);
-  if (invalid) {
-    invalid.block.classList.remove("collapsed");
-    invalid.block.scrollIntoView({ behavior: "smooth", block: "center" });
-    document.getElementById(invalid.field).focus();
+  // Pass 1 — validate everything, showing every error at once. Nothing is written.
+  const requiredInvalid = validateSubBlocksInline(blocks);
+  const visitInvalid = validateSubBlocksVisitCategory(blocks);
+  // Name/short-name collisions are only meaningful once the fields are filled in, and the
+  // collision check rewrites the same inline error slots, so it runs after the required checks.
+  const dupInvalid = (requiredInvalid || visitInvalid) ? null : findBatchDuplicate(blocks);
+  const firstInvalid = earliestInvalid(blocks, requiredInvalid, visitInvalid, dupInvalid);
+  if (nameErr || firstInvalid) {
+    if (nameErr) { document.getElementById("nameField").focus(); }
+    if (firstInvalid) {
+      const failing = blocks.filter(b => b.querySelector(".field.error")).length;
+      if (!nameErr) revealInvalidBlocks(blocks, firstInvalid); else blocks.forEach(b => { if (b.querySelector(".field.error")) b.classList.remove("collapsed"); });
+      toast(`Activation stopped — ${failing} sub care setting${failing === 1 ? " needs" : "s need"} attention. Nothing was created or activated.`);
+    } else {
+      toast("Activation stopped — nothing was created or activated.");
+    }
     return;
   }
-  const dupInvalid = findBatchDuplicate(blocks);
-  if (dupInvalid) {
-    dupInvalid.block.classList.remove("collapsed");
-    dupInvalid.block.scrollIntoView({ behavior: "smooth", block: "center" });
-    document.getElementById(dupInvalid.field).focus();
-    return;
-  }
+  // Pass 2 — every check passed, so commit the whole group as Active in one step.
   const main = { id: nextMainId(), label: groupName };
   MAIN_GROUPS.push(main);
-  // Each sub-setting activates (or stays Draft) on its own merits — one being incomplete
-  // shouldn't block the ones that are ready, since they're fully independent Care Settings.
   const created = collectAllSubRecords(main.id);
   // Converting an existing standalone Draft into a group: it can't have any dependents yet, so
   // it's simply replaced by its new sub-settings rather than left behind as a stray duplicate.
@@ -1601,16 +1659,13 @@ async function activateGroup() {
     CARE_SETTINGS.splice(editingIndex, 1);
     editingIndex = null;
   }
-  let activatedCount = 0;
-  created.forEach((record, i) => {
-    const issues = computeIssuesFor(subFieldScope(blocks[i].dataset.subId), true);
-    if (!issues.basic.length) { record.status = "active"; activatedCount++; }
+  created.forEach(record => {
+    record.status = "active";
     CARE_SETTINGS.push(record);
-    logAuditEvent(record.code, record.status === "active" ? "Activated" : "Created", `Part of "${groupName}"`);
+    logAuditEvent(record.code, "Activated", `Part of "${groupName}"`);
   });
   renderTable();
-  const draftCount = created.length - activatedCount;
-  toast(`${created.length} care settings created under "${groupName}" — ${activatedCount} activated${draftCount ? `, ${draftCount} left as Draft (missing info)` : ""}.`);
+  toast(`${created.length} care settings created and activated under "${groupName}".`);
   state.dirty = false;
   closePanel();
 }
@@ -1684,6 +1739,10 @@ function onSubEditFieldChange(code) {
   const heading = document.getElementById(scope + "heading");
   const nameField = document.getElementById(scope + "nameField");
   if (heading && nameField) heading.textContent = nameField.value.trim() || "Sub care setting";
+  ["nameField", "shortNameField", "defaultVisitCategory"].forEach(f => {
+    const el = document.getElementById(scope + f);
+    if (el && el.value.trim()) showFieldError(scope + f, "");
+  });
   updateUnsavedIndicator(code);
   recomputeGlobalDirty();
 }
@@ -1884,6 +1943,7 @@ function removeSubCardFromDrawer(mainId, code) {
   if (card) card.remove();
   delete subEditSnapshots[code];
   recomputeGlobalDirty();
+  renderFooter();
 }
 // opts.expandCode: the Sub whose "Edit" was clicked to get here (left undefined/omitted when
 // arriving via the Main's own "Edit", where every Sub starts collapsed).
@@ -1965,6 +2025,25 @@ async function saveMainEdit() {
   showFieldError("shortNameField", shortErr);
   if (nameErr || shortErr) { focusFirstError(); return; }
 
+  // Any "Add sub setting" clicks during this edit session append a plain blank accordion (same
+  // markup create mode uses) right into #subSettingsContainer, rather than navigating to a
+  // separate drawer — so it has no CARE_SETTINGS record yet ([data-sub-id], not [data-cs-code]).
+  // They are validated BEFORE anything is written, so one bad new Sub can't leave the other
+  // edits half-saved. In an ACTIVE group a new Sub joins as Active, so it must pass the same
+  // bar as Activate (Default Visit Category included); in a Draft group it may stay incomplete.
+  const groupIsActive = !mainIsDraftGroup(mainId);
+  const newBlocks = [...document.querySelectorAll("#subSettingsContainer [data-sub-id]")];
+  const invalidNew = validateSubBlocksInline(newBlocks);
+  const invalidVisit = groupIsActive ? validateSubBlocksVisitCategory(newBlocks) : null;
+  const dupInvalid = (newBlocks.length && !invalidNew && !invalidVisit) ? findBatchDuplicate(newBlocks) : null;
+  const firstNew = earliestInvalid(newBlocks, invalidNew, invalidVisit, dupInvalid);
+  if (firstNew) {
+    newBlocks.forEach(b => { if (b.querySelector(".field.error")) b.classList.remove("collapsed"); });
+    firstNew.block.scrollIntoView({ behavior: "smooth", block: "center" });
+    document.getElementById(firstNew.field).focus();
+    return;
+  }
+
   const codes = [...document.querySelectorAll("#subSettingsContainer [data-cs-code]")].map(c => c.dataset.csCode);
   for (const code of codes) {
     const ok = await commitSubCard(code);
@@ -1972,26 +2051,6 @@ async function saveMainEdit() {
       const card = document.querySelector(`[data-cs-code="${code}"]`);
       card.classList.remove("collapsed");
       card.scrollIntoView({ behavior: "smooth", block: "center" });
-      return;
-    }
-  }
-
-  // Any "Add sub setting" clicks during this edit session append a plain blank accordion (same
-  // markup create mode uses) right into #subSettingsContainer, rather than navigating to a
-  // separate drawer — so it has no CARE_SETTINGS record yet ([data-sub-id], not [data-cs-code]).
-  // Validate and create those here, alongside the existing Subs' own commits above.
-  const newBlocks = [...document.querySelectorAll("#subSettingsContainer [data-sub-id]")];
-  const invalidNew = validateSubBlocksInline(newBlocks);
-  if (invalidNew) {
-    invalidNew.block.scrollIntoView({ behavior: "smooth", block: "center" });
-    document.getElementById(invalidNew.field).focus();
-    return;
-  }
-  if (newBlocks.length) {
-    const dupInvalid = findBatchDuplicate(newBlocks);
-    if (dupInvalid) {
-      dupInvalid.block.scrollIntoView({ behavior: "smooth", block: "center" });
-      document.getElementById(dupInvalid.field).focus();
       return;
     }
   }
@@ -2004,15 +2063,138 @@ async function saveMainEdit() {
   let createdCount = 0;
   newBlocks.forEach(block => {
     const record = collectRecordFor(subFieldScope(block.dataset.subId), mainId);
+    if (groupIsActive) record.status = "active";
     CARE_SETTINGS.push(record);
     logAuditEvent(record.code, "Created", `Part of "${newLabel}"`);
+    if (groupIsActive) logAuditEvent(record.code, "Activated", `Part of "${newLabel}"`);
     createdCount++;
   });
   if (createdCount) renderMainEditSubs(mainId);
 
   recomputeGlobalDirty();
   renderTable();
-  toast(createdCount ? `"${newLabel}" saved — ${createdCount} new sub care setting${createdCount === 1 ? "" : "s"} added.` : `"${newLabel}" saved.`);
+  renderFooter();
+  toast(createdCount
+    ? `"${newLabel}" saved — ${createdCount} new sub care setting${createdCount === 1 ? "" : "s"} added${groupIsActive ? " and activated" : ""}.`
+    : `"${newLabel}" saved.`);
+}
+
+// Appends one real (already-saved) Sub's accordion card without rebuilding the others, so unsaved
+// typing in any other card survives. Mirrors what renderMainEditSubs() does per card.
+function appendSubEditCard(cs) {
+  const container = document.getElementById("subSettingsContainer");
+  container.insertAdjacentHTML("beforeend", subEditCardHtml(cs, CARE_SETTINGS.indexOf(cs), false));
+  const scope = subEditScope(cs.code);
+  document.getElementById(scope + "defaultVisitCategory").value = cs.visitCategory;
+  document.getElementById(scope + "defaultDurationUnit").value = cs.duration.unit;
+  document.getElementById(scope + "chiefComplaintForm").value = cs.chiefComplaintForm;
+  subEditSnapshots[cs.code] = snapshotSubCard(cs);
+}
+// A group has no status field of its own; it is derived. A group is a DRAFT group while every Sub
+// is still Draft (it has never been activated). As soon as it has been activated it is an ACTIVE
+// group — and from then on every Sub in it is Active or Inactive, never Draft, because new Subs
+// added to an active group must pass full validation and are saved as Active (see saveMainEdit).
+function mainIsDraftGroup(mainId) {
+  const subs = CARE_SETTINGS.filter(c => c.mainId === mainId);
+  return subs.length > 0 && subs.every(c => c.status === "draft");
+}
+// Activate from the Main edit drawer — ALL-OR-NOTHING, and only offered for a DRAFT group (every
+// Sub still Draft). It validates the Main and every Sub (plus any new Sub cards) using the current
+// on-screen values; if any one fails, the whole activation fails and NOTHING changes: every Sub
+// keeps its status and its saved values, and no edit is written. Only when everything passes are
+// all Subs saved and activated together.
+async function activateMainEdit() {
+  const mainId = editingMainId;
+  const main = MAIN_GROUPS.find(m => m.id === mainId);
+  if (!main || !mainIsDraftGroup(mainId)) return;
+  state.touched.add("cardState-basic");
+
+  // ----- Pass 1: validate only (writes inline error text and nothing else) -----
+  const newLabel = document.getElementById("nameField").value.trim();
+  const newShort = document.getElementById("shortNameField").value.trim();
+  const mainNameErr = !newLabel ? "Name is required." : (isNameTaken(newLabel, null, mainId) ? "This name is already in use." : "");
+  const mainShortErr = (newShort && isNameTaken(newShort, null, mainId)) ? "This short name is already in use." : "";
+  showFieldError("nameField", mainNameErr);
+  showFieldError("shortNameField", mainShortErr);
+
+  const draftCards = [...document.querySelectorAll("#subSettingsContainer [data-cs-code]")]
+    .map(card => ({ card, code: card.dataset.csCode }))
+    .filter(x => { const r = CARE_SETTINGS.find(c => c.code === x.code); return r && r.status === "draft"; });
+  const seenNames = new Set(), seenShort = new Set();
+  const badCards = [];
+  draftCards.forEach(({ card, code }) => {
+    const idx = CARE_SETTINGS.findIndex(c => c.code === code);
+    const scope = subEditScope(code);
+    const v = currentSubCardValues(code);
+    let nameErr = !v.name ? "Care setting name is required." : isNameTaken(v.name, idx) ? "This name is already in use." : "";
+    let shortErr = !v.shortName ? "Short name is required." : isNameTaken(v.shortName, idx) ? "This short name is already in use." : "";
+    if (!nameErr && seenNames.has(v.name.toLowerCase())) nameErr = "Repeats another sub care setting's name.";
+    if (!shortErr && seenShort.has(v.shortName.toLowerCase())) shortErr = "Repeats another sub care setting's short name.";
+    if (v.name) seenNames.add(v.name.toLowerCase());
+    if (v.shortName) seenShort.add(v.shortName.toLowerCase());
+    const visitErr = v.visitCategory ? "" : "Default visit category is required.";
+    showFieldError(scope + "nameField", nameErr);
+    showFieldError(scope + "shortNameField", shortErr);
+    showFieldError(scope + "defaultVisitCategory", visitErr);
+    if (nameErr || shortErr || visitErr) badCards.push({ card, field: scope + (nameErr ? "nameField" : shortErr ? "shortNameField" : "defaultVisitCategory") });
+  });
+
+  const newBlocks = [...document.querySelectorAll("#subSettingsContainer [data-sub-id]")];
+  const requiredInvalid = validateSubBlocksInline(newBlocks);
+  const visitInvalid = validateSubBlocksVisitCategory(newBlocks);
+  const dupInvalid = (requiredInvalid || visitInvalid) ? null : findBatchDuplicate(newBlocks);
+  const firstNew = earliestInvalid(newBlocks, requiredInvalid, visitInvalid, dupInvalid);
+
+  if (mainNameErr || mainShortErr || badCards.length || firstNew) {
+    badCards.forEach(b => b.card.classList.remove("collapsed"));
+    newBlocks.forEach(b => { if (b.querySelector(".field.error")) b.classList.remove("collapsed"); });
+    const failingSubs = badCards.length + newBlocks.filter(b => b.querySelector(".field.error")).length;
+    if (mainNameErr || mainShortErr) focusFirstError();
+    else if (badCards.length) { badCards[0].card.scrollIntoView({ behavior: "smooth", block: "center" }); document.getElementById(badCards[0].field).focus(); }
+    else { firstNew.block.scrollIntoView({ behavior: "smooth", block: "center" }); document.getElementById(firstNew.field).focus(); }
+    toast(failingSubs
+      ? `Activation stopped — ${failingSubs} sub care setting${failingSubs === 1 ? " needs" : "s need"} attention. Nothing was changed.`
+      : "Activation stopped — nothing was changed.");
+    return;
+  }
+
+  // ----- Pass 2: everything is valid — save and activate the whole set together -----
+  if (main.label !== newLabel || (main.shortName || "") !== newShort) logAuditEvent(mainId, "Renamed", newLabel);
+  main.label = newLabel;
+  main.shortName = newShort;
+  document.getElementById("panelTitle").textContent = "Edit " + newLabel;
+
+  let activated = 0;
+  draftCards.forEach(({ code }) => {
+    const idx = CARE_SETTINGS.findIndex(c => c.code === code);
+    const existing = CARE_SETTINGS[idx];
+    const v = currentSubCardValues(code);
+    const updated = { ...existing, ...v, status: "active", updated: TODAY_STR, by: CURRENT_USER };
+    CARE_SETTINGS[idx] = updated;
+    if (v.name !== existing.name) logAuditEvent(code, "Renamed", v.name);
+    logAuditEvent(code, "Activated", `Part of "${newLabel}"`);
+    subEditSnapshots[code] = snapshotSubCard(updated);
+    const headingEl = document.getElementById(subEditScope(code) + "heading");
+    if (headingEl) headingEl.textContent = updated.name;
+    updateUnsavedIndicator(code);
+    refreshSubCardChrome(mainId, code);
+    activated++;
+  });
+  newBlocks.forEach(block => {
+    const record = collectRecordFor(subFieldScope(block.dataset.subId), mainId);
+    record.status = "active";
+    CARE_SETTINGS.push(record);
+    logAuditEvent(record.code, "Created", `Part of "${newLabel}"`);
+    logAuditEvent(record.code, "Activated", `Part of "${newLabel}"`);
+    block.remove();
+    appendSubEditCard(record);
+    activated++;
+  });
+  refreshSubSettingHeadings();
+  recomputeGlobalDirty();
+  renderTable();
+  renderFooter();
+  toast(`"${newLabel}" — ${activated} sub care setting${activated === 1 ? "" : "s"} activated.`);
 }
 
 // Bound to #panelBody — the Care Setting drawer's own body. Deliberately NOT document.body:
@@ -2282,9 +2464,13 @@ function renderFooter() {
     // Phase 3: one Save writes the Main's Name/Short Name plus every Sub's fields in a single
     // batch — see saveMainEdit(). Status changes (Deactivate/Reactivate/Delete) happen
     // immediately from each Sub's own menu instead, same as they always have.
+    // Editing a DRAFT group: Cancel, Save changes, Activate (all-or-nothing — see activateMainEdit()).
+    // Editing an ACTIVE group: Cancel, Save changes only — a group is activated as a whole, once.
+    const canActivate = mainIsDraftGroup(editingMainId);
     footer.innerHTML = `<div style="display:flex; gap:8px; margin-left:auto;">
       <button class="btn tertiary" onclick="requestClose()">Cancel</button>
-      <button class="btn primary" onclick="saveMainEdit()">Save changes</button>
+      <button class="btn ${canActivate ? "secondary" : "primary"}" onclick="saveMainEdit()">Save changes</button>
+      ${canActivate ? `<button class="btn primary" onclick="activateMainEdit()">Activate</button>` : ""}
     </div>`;
     return;
   }
