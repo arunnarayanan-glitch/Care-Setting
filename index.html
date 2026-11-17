@@ -281,7 +281,7 @@ strong{font-weight:600}
               <th>Active trackerboards</th>
               <th data-key-th="updated"><button type="button" class="sort-th" onclick="setDashboardSort('updated')">Updated on<span class="sort-glyph"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg></span></button></th>
               <th data-key-th="updatedBy"><button type="button" class="sort-th" onclick="setDashboardSort('updatedBy')">Updated by<span class="sort-glyph"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg></span></button></th>
-              <th data-key-th="status"><button type="button" class="sort-th" onclick="setDashboardSort('status')">Status<span class="sort-glyph"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-caret-up-fill" viewBox="0 0 16 16"><path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/></svg></span></button></th>
+              <th>Status</th>
               <th class="actions">Actions</th>
             </tr>
           </thead>
@@ -338,7 +338,7 @@ strong{font-weight:600}
       </div>
       <div class="field">
         <label for="shortNameField">Short name <span class="req">*</span></label>
-        <input type="text" id="shortNameField" placeholder="e.g. ICU" oninput="onNameInput()" aria-describedby="shortNameFieldError">
+        <input type="text" id="shortNameField" maxlength="6" placeholder="e.g. ICU" oninput="onNameInput()" aria-describedby="shortNameFieldError">
         <div class="field-error" id="shortNameFieldError"></div>
       </div>
     </div>
@@ -542,7 +542,7 @@ const CARE_SETTINGS = [
       { name: "ICU Overflow", facility: "North Wing", status: "draft" }
     ]), mainId: "MAIN-0001" },
 
-  { name: "Maternity", code: "CS-000006", shortName: "Maternity", isMaternity: true, status: "inactive", updated: "2026-07-25", by: "Amanda Carter",
+  { name: "Maternity", code: "CS-000006", shortName: "Mater", isMaternity: true, status: "inactive", updated: "2026-07-25", by: "Amanda Carter",
     visitCategory: "New Patient", duration: { value: 4, unit: "hours" }, chiefComplaintForm: "form-standard-complaint",
     dependencies: dep([{ name: "Maternity Rounds", facility: "Main Campus", status: "active" }]), mainId: "MAIN-0001" },
 
@@ -602,6 +602,15 @@ function findMainByLabel(label) {
 // collide with anything in any of the others. This is the single check every uniqueness rule
 // in this file now goes through. excludeMainId lets a Main's own edit modal check new values
 // against everything else without tripping over its own current Name/Short Name.
+// Short name format rule: letters and numbers only (no spaces, hyphens or symbols), up to 6 characters.
+// Name has no such rule and may contain special characters.
+const SHORT_NAME_MAX = 6;
+const SHORT_NAME_MSG = "Use letters and numbers only, up to 6 characters.";
+function shortNameFormatError(value) {
+  const v = String(value || "").trim();
+  if (!v) return "";
+  return (/^[A-Za-z0-9]+$/.test(v) && v.length <= SHORT_NAME_MAX) ? "" : SHORT_NAME_MSG;
+}
 function isNameTaken(value, excludeIdx, excludeMainId) {
   const key = String(value || "").trim().toLowerCase();
   if (!key) return false;
@@ -1397,7 +1406,7 @@ function subSettingBlockHtml(subId) {
         </div>
         <div class="field">
           <label for="${scope}shortNameField">Short name <span class="req">*</span></label>
-          <input type="text" id="${scope}shortNameField" placeholder="e.g. WA" oninput="onSubNameInput('${subId}')" aria-describedby="${scope}shortNameFieldError">
+          <input type="text" id="${scope}shortNameField" maxlength="6" placeholder="e.g. WA" oninput="onSubNameInput('${subId}')" aria-describedby="${scope}shortNameFieldError">
           <div class="field-error" id="${scope}shortNameFieldError"></div>
         </div>
       </div>
@@ -1466,7 +1475,7 @@ function onSubVisitCategoryChange(subId) {
 function onSubNameInput(subId) {
   const scope = subFieldScope(subId);
   if (document.getElementById(scope + "nameField").value.trim()) showFieldError(scope + "nameField", "");
-  if (document.getElementById(scope + "shortNameField").value.trim()) showFieldError(scope + "shortNameField", "");
+  { const sv = document.getElementById(scope + "shortNameField").value.trim(); if (sv) showFieldError(scope + "shortNameField", shortNameFormatError(sv)); }
   refreshSubSettingHeadings();
   touchSection(document.getElementById(scope + "cardState-basic"));
 }
@@ -1549,7 +1558,7 @@ function validateSubBlocksInline(blocks) {
     const nameVal = document.getElementById(scope + "nameField").value.trim();
     const shortVal = document.getElementById(scope + "shortNameField").value.trim();
     const nameErr = !nameVal ? "Care setting name is required." : "";
-    const shortErr = !shortVal ? "Short name is required." : "";
+    const shortErr = !shortVal ? "Short name is required." : shortNameFormatError(shortVal);
     showFieldError(scope + "nameField", nameErr);
     showFieldError(scope + "shortNameField", shortErr);
     if ((nameErr || shortErr) && !firstInvalid) {
@@ -1570,7 +1579,11 @@ async function saveGroupDraft() {
     : isNameTaken(groupName, editingIndex) ? `"${groupName}" is already used by another care setting.`
     : "";
   showFieldError("nameField", nameErr);
+  const mainShort = document.getElementById("shortNameField").value.trim();
+  const mainShortErr = mainShort ? (shortNameFormatError(mainShort) || (isNameTaken(mainShort, editingIndex) ? "This short name is already in use." : "")) : "";
+  showFieldError("shortNameField", mainShortErr);
   if (nameErr) { document.getElementById("nameField").focus(); return; }
+  if (mainShortErr) { document.getElementById("shortNameField").focus(); return; }
   const blocks = [...document.querySelectorAll("[data-sub-id]")];
   const invalid = validateSubBlocksInline(blocks);
   if (invalid) {
@@ -1586,7 +1599,7 @@ async function saveGroupDraft() {
     document.getElementById(dupInvalid.field).focus();
     return;
   }
-  const main = { id: nextMainId(), label: groupName };
+  const main = { id: nextMainId(), label: groupName, shortName: mainShort };
   MAIN_GROUPS.push(main);
   const created = collectAllSubRecords(main.id);
   // Converting an existing standalone Draft into a group: it can't have any dependents yet, so
@@ -1642,6 +1655,9 @@ async function activateGroup() {
     : isNameTaken(groupName, editingIndex) ? `"${groupName}" is already used by another care setting.`
     : "";
   showFieldError("nameField", nameErr);
+  const mainShort = document.getElementById("shortNameField").value.trim();
+  const mainShortErr = mainShort ? (shortNameFormatError(mainShort) || (isNameTaken(mainShort, editingIndex) ? "This short name is already in use." : "")) : "";
+  showFieldError("shortNameField", mainShortErr);
   const blocks = [...document.querySelectorAll("[data-sub-id]")];
   // Pass 1 — validate everything, showing every error at once. Nothing is written.
   const requiredInvalid = validateSubBlocksInline(blocks);
@@ -1650,11 +1666,12 @@ async function activateGroup() {
   // collision check rewrites the same inline error slots, so it runs after the required checks.
   const dupInvalid = (requiredInvalid || visitInvalid) ? null : findBatchDuplicate(blocks);
   const firstInvalid = earliestInvalid(blocks, requiredInvalid, visitInvalid, dupInvalid);
-  if (nameErr || firstInvalid) {
+  if (nameErr || mainShortErr || firstInvalid) {
     if (nameErr) { document.getElementById("nameField").focus(); }
+    else if (mainShortErr) { document.getElementById("shortNameField").focus(); }
     if (firstInvalid) {
       const failing = blocks.filter(b => b.querySelector(".field.error")).length;
-      if (!nameErr) revealInvalidBlocks(blocks, firstInvalid); else blocks.forEach(b => { if (b.querySelector(".field.error")) b.classList.remove("collapsed"); });
+      if (!nameErr && !mainShortErr) revealInvalidBlocks(blocks, firstInvalid); else blocks.forEach(b => { if (b.querySelector(".field.error")) b.classList.remove("collapsed"); });
       toast(`Activation stopped — ${failing} sub care setting${failing === 1 ? " needs" : "s need"} attention. Nothing was created or activated.`);
     } else {
       toast("Activation stopped — nothing was created or activated.");
@@ -1662,7 +1679,7 @@ async function activateGroup() {
     return;
   }
   // Pass 2 — every check passed, so commit the whole group as Active in one step.
-  const main = { id: nextMainId(), label: groupName };
+  const main = { id: nextMainId(), label: groupName, shortName: mainShort };
   MAIN_GROUPS.push(main);
   const created = collectAllSubRecords(main.id);
   // Converting an existing standalone Draft into a group: it can't have any dependents yet, so
@@ -1752,10 +1769,12 @@ function onSubEditFieldChange(code) {
   const heading = document.getElementById(scope + "heading");
   const nameField = document.getElementById(scope + "nameField");
   if (heading && nameField) heading.textContent = nameField.value.trim() || "Sub care setting";
-  ["nameField", "shortNameField", "defaultVisitCategory"].forEach(f => {
+  ["nameField", "defaultVisitCategory"].forEach(f => {
     const el = document.getElementById(scope + f);
     if (el && el.value.trim()) showFieldError(scope + f, "");
   });
+  const shortEl = document.getElementById(scope + "shortNameField");
+  if (shortEl && shortEl.value.trim()) showFieldError(scope + "shortNameField", shortNameFormatError(shortEl.value));
   updateUnsavedIndicator(code);
   recomputeGlobalDirty();
 }
@@ -1792,7 +1811,7 @@ function subEditCardHtml(cs, idx, expanded) {
         </div>
         <div class="field">
           <label for="${scope}shortNameField">Short name <span class="req">*</span></label>
-          <input type="text" id="${scope}shortNameField" value="${cs.shortName || ""}" oninput="onSubEditFieldChange('${cs.code}')" aria-describedby="${scope}shortNameFieldError">
+          <input type="text" id="${scope}shortNameField" maxlength="6" value="${cs.shortName || ""}" oninput="onSubEditFieldChange('${cs.code}')" aria-describedby="${scope}shortNameFieldError">
           <div class="field-error" id="${scope}shortNameFieldError"></div>
         </div>
       </div>
@@ -1853,7 +1872,7 @@ async function commitSubCard(code) {
   const shortName = document.getElementById(scope + "shortNameField").value.trim();
   const visitCategory = document.getElementById(scope + "defaultVisitCategory").value;
   const nameErr = !name ? "Care setting name is required." : (isNameTaken(name, idx) ? "This name is already in use." : "");
-  const shortErr = !shortName ? "Short name is required." : (isNameTaken(shortName, idx) ? "This short name is already in use." : "");
+  const shortErr = !shortName ? "Short name is required." : (shortNameFormatError(shortName) || (isNameTaken(shortName, idx) ? "This short name is already in use." : ""));
   const visitCategoryErr = (existing.status !== "draft" && !visitCategory) ? "Default visit category is required." : "";
   showFieldError(scope + "nameField", nameErr);
   showFieldError(scope + "shortNameField", shortErr);
@@ -2033,7 +2052,7 @@ async function saveMainEdit() {
   const newLabel = document.getElementById("nameField").value.trim();
   const newShort = document.getElementById("shortNameField").value.trim();
   const nameErr = !newLabel ? "Name is required." : (isNameTaken(newLabel, null, mainId) ? "This name is already in use." : "");
-  const shortErr = (newShort && isNameTaken(newShort, null, mainId)) ? "This short name is already in use." : "";
+  const shortErr = newShort ? (shortNameFormatError(newShort) || (isNameTaken(newShort, null, mainId) ? "This short name is already in use." : "")) : "";
   showFieldError("nameField", nameErr);
   showFieldError("shortNameField", shortErr);
   if (nameErr || shortErr) { focusFirstError(); return; }
@@ -2126,7 +2145,7 @@ async function activateMainEdit() {
   const newLabel = document.getElementById("nameField").value.trim();
   const newShort = document.getElementById("shortNameField").value.trim();
   const mainNameErr = !newLabel ? "Name is required." : (isNameTaken(newLabel, null, mainId) ? "This name is already in use." : "");
-  const mainShortErr = (newShort && isNameTaken(newShort, null, mainId)) ? "This short name is already in use." : "";
+  const mainShortErr = newShort ? (shortNameFormatError(newShort) || (isNameTaken(newShort, null, mainId) ? "This short name is already in use." : "")) : "";
   showFieldError("nameField", mainNameErr);
   showFieldError("shortNameField", mainShortErr);
 
@@ -2140,7 +2159,7 @@ async function activateMainEdit() {
     const scope = subEditScope(code);
     const v = currentSubCardValues(code);
     let nameErr = !v.name ? "Care setting name is required." : isNameTaken(v.name, idx) ? "This name is already in use." : "";
-    let shortErr = !v.shortName ? "Short name is required." : isNameTaken(v.shortName, idx) ? "This short name is already in use." : "";
+    let shortErr = !v.shortName ? "Short name is required." : shortNameFormatError(v.shortName) || (isNameTaken(v.shortName, idx) ? "This short name is already in use." : "");
     if (!nameErr && seenNames.has(v.name.toLowerCase())) nameErr = "Repeats another sub care setting's name.";
     if (!shortErr && seenShort.has(v.shortName.toLowerCase())) shortErr = "Repeats another sub care setting's short name.";
     if (v.name) seenNames.add(v.name.toLowerCase());
@@ -2222,6 +2241,7 @@ function computeIssues(forActivation) {
   const shortName = document.getElementById("shortNameField").value.trim();
   const basic = [];
   let shortNameDupe = false;
+  let shortNameFormat = "";
   // Phase 3: in Main-edit mode, nameField/shortNameField hold the MAIN's own Name/Short Name
   // (reused rather than duplicated — see openMainEditDrawer). Without excluding the Main's own
   // id here, its current label would always collide with itself in isNameTaken().
@@ -2231,7 +2251,10 @@ function computeIssues(forActivation) {
   // Short Name is mandatory for both Save draft and Activate — once given, it must also be
   // unique, since Trackerboard configuration keys off Short Name internally.
   if (!shortName) basic.push("Short name is required.");
-  else if (isNameTaken(shortName, editingIndex, excludeMain)) {
+  else if (shortNameFormatError(shortName)) {
+    shortNameFormat = shortNameFormatError(shortName);
+    basic.push(shortNameFormat);
+  } else if (isNameTaken(shortName, editingIndex, excludeMain)) {
     basic.push("This short name is already in use.");
     shortNameDupe = true;
   }
@@ -2240,7 +2263,7 @@ function computeIssues(forActivation) {
     const visitCategoryEl = document.getElementById("defaultVisitCategory");
     if (visitCategoryEl && !visitCategoryEl.value) basic.push("Default visit category is required.");
   }
-  return { basic, shortNameDupe };
+  return { basic, shortNameDupe, shortNameFormat };
 }
 function setSectionState(id, count, touched) {
   const dot = document.getElementById(id);
@@ -2274,7 +2297,7 @@ function renderValidationState(forActivation) {
   setSectionState("cardState-basic", touched ? issues.basic.length : 0, touched);
   setSectionState("cardState-clinical", 0, state.touched.has("cardState-clinical"));
   showFieldError("nameField", touched && !document.getElementById("nameField").value.trim() ? "Care setting name is required." : "");
-  showFieldError("shortNameField", touched && !document.getElementById("shortNameField").value.trim() ? "Short name is required." : (touched && issues.shortNameDupe ? "This short name is already in use." : ""));
+  showFieldError("shortNameField", touched && !document.getElementById("shortNameField").value.trim() ? "Short name is required." : (issues.shortNameFormat ? issues.shortNameFormat : (touched && issues.shortNameDupe ? "This short name is already in use." : "")));
   const visitCategoryEl = document.getElementById("defaultVisitCategory");
   if (visitCategoryEl) showFieldError("defaultVisitCategory", touched && forActivation && !visitCategoryEl.value ? "Default visit category is required." : "");
   state.blocking = issues.basic.length;
